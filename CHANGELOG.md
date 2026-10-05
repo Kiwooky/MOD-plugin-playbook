@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.1 — 2026-10-06
+
+Harvested from the Taj Mahal session (Alesis-preset hall reverb: cookbook prototype → its own repo). Only the plugin-related learnings; the session's MOD UI troubleshooting is already in `known-mod-issues.md`.
+
+- `lv2test.py`: `rt60()` (Schroeder T30) and `onset_ms()` for reverb and pre-delay tests.
+- Docs: setting reverb loop gain from a target RT60 and scaling tank lengths from the reference rate; time knobs that read true through upstream delays; rounding versus truncation in lo-fi loops (`dsp.md`); reverb and first-run tests (`testing.md`); preset labels versus folder names, shipping the original's setting as a preset (`presets.md`); GitHub's generated licence (`path-b-github-repo.md`); reading `version`/`stability` from `/effect/get` (`known-mod-issues.md`). Six lessons with their incidents.
+- Verified: `rt60()` and `onset_ms()` reproduce Taj Mahal's suite (RT60 5.63 / 5.58 / 5.72 s, onset 81.9 ms).
+
 ## 0.3.0 — 2026-10-06
 
 Harvested from the EC-280 session (Dynacord EC 280 bucket-brigade echo: cookbook prototype → its own repo, built without this playbook).

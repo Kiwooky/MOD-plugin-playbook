@@ -28,4 +28,6 @@ It writes `presets.ttl`, lists each preset in `manifest.ttl` (re-runnable: it re
 
 - **Leave out footswitch states** (`--exclude`): hold, freeze, slam, anything momentary. A preset saved with Hold on would freeze whatever is in the buffer when loaded. The bypass port is always left out.
 - **Older presets** made before a port was added lack it; it keeps its current value (the default on a fresh instance). Check the report.
+- **Use the label, not the folder name.** Renaming a preset on the unit changes its `rdfs:label` but not its bundle folder: Taj Mahal's `taj_mahal-Early_wobble.lv2` held "Negative reflections". `presets_from_device.py` reads the label; check the names with the person anyway. Verified on a Duo.
+- **Ship the reference settings as a named preset too.** For a recreation, add the original's own setting (Taj Mahal: "Taj Mahal (1988 factory)") so people can always get back to it after trying the others.
 - Bump the version: presets are plugin data, cached per version like the face.

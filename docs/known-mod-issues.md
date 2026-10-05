@@ -4,7 +4,7 @@ Check here before debugging your plugin.
 
 ## Stale plugin data or the default "tuna can" thumbnail
 
-The MOD UI caches plugin info and images by URI + version. Same version after a reinstall = old face, old ports, old thumbnail. **Fix:** bump the version and reinstall; hard-refresh (Cmd/Ctrl+Shift+R). **Check:** `http://192.168.51.1/effect/get?uri=<uri>&nocache=1` shows what is really installed.
+The MOD UI caches plugin info and images by URI + version. Same version after a reinstall = old face, old ports, old thumbnail. **Fix:** bump the version and reinstall; hard-refresh (Cmd/Ctrl+Shift+R). **Check:** `http://192.168.51.1/effect/get?uri=<uri>&nocache=1` shows what is really installed. Read its `version`, `stability` and `bundles` fields: Taj Mahal still showed the tuna can after "reinstalling v1.0.2" because the Duo held a `version 0.0`, `stability: experimental` build (an older file had been uploaded); a single bundle ruled out duplicates. `experimental` also means `lv2:minorVersion` is 0. Rebooting the Duo doesn't help: the stale image is in the browser's cache. Verified on a Duo.
 
 ## The web UI stops showing MIDI changes and meters (MOD OS 1.13.5 and 1.14 RC)
 

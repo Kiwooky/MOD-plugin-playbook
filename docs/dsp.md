@@ -38,6 +38,20 @@ MOD units are small ARM computers. The Duo (Cortex-A7, 32-bit) is the tightest; 
 - **Varispeed:** let the read point follow an integrated motor speed with inertia (a one-pole on speed), and the pitch bends like tape. A fixed-cell "disc" model costs far more at short times than a tape-style delay line.
 - **Hermite (4-point) interpolation** for audible taps; linear is fine for internal taps that are filtered anyway.
 
+## Reverbs
+
+- **Set the loop gain from the RT60 you want, not by ear.** For a tank whose energy passes *n* gain stages per lap of total length *L* seconds, each stage is g = 10^(−3·L / (n·RT60)). Taj Mahal (Dattorro figure-eight, n = 4, L ≈ 0.73 s) maps its Decay knob to a target RT60 and measured slightly short of it (5.6 s for 5.9 s) because the damping filters take some energy too. In tests.
+- **Scale every tank and diffuser length from the reference rate** (Dattorro's 29 761 Hz) by fs ÷ ref, including tap positions and modulation depth. Taj Mahal's RT60 then stayed within ±0.1 s at 44.1, 48 and 96 kHz. In tests.
+- **Fixed lengths as integer taps, modulated allpasses interpolated.** Only the tank's modulated allpasses (and any chorus or pre-delay) need fractional reads; the input diffusers and second allpasses can be whole samples. That's cheaper on the Duo; Taj Mahal's RT60 moved by about 0.1 s when it switched (in tests; not compared by ear).
+
+## Time controls read true
+
+- **A time knob means the whole path.** Anything in front of a delay adds to it: Taj Mahal's chorus has an 8 ms centre delay, so its 81 ms pre-delay first arrived at 89.9 ms. Subtract the upstream delay (clamped at 0) and test the onset end to end; it measured 81.9 ms afterwards. In tests.
+
+## Lo-fi quantisation inside a loop
+
+- **Round, don't truncate, when you quantise values that recirculate.** Truncating toward zero removes a little energy on every pass. Taj Mahal's "Vintage" 16-bit tank storage first cut the decay from 5.5 s to 4.0 s (and to 3.4 s at 96 kHz, which has more passes per second). Rounding kept the decay time, and the very end of the tail still falls to exactly zero. In tests.
+
 ## Clocked delays (BBD, early digital)
 
 Some originals don't move a tap: they change the clock that walks a fixed-length memory (bucket brigades, 1980s sampler-style delays). Then delay = length ÷ clock, sweeps bend pitch for free, and a frozen buffer varispeeds when the clock changes. Model it that way:

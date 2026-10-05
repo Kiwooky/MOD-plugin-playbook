@@ -29,6 +29,9 @@ Copy `templates/plugin/tests/test_simple_echo.py` and keep these:
 - **No ticks** with musical input (`pluck_train` + `tick_count`), **outputs under 0 dBFS**.
 - **Silence in, silence out** (unless noise is a feature).
 
+- **Reverbs:** RT60 (`rt60`) at all three rates (agreeing within a few tenths of a second), the decay knob monotonic over its range, pre-delay by onset (`onset_ms`), stereo outputs decorrelated (|corr| < 0.2), and the tail reaching silence.
+- **First run:** render with a non-default value from sample 0 (pre-delay, bypassed) and check there's no glide or fade-in. Controls arrive with the first `run()`.
+
 Then **one test per promise in the spec** ("Wobble 10 is about 4× stock", "Repeat 7 + Reverb 10 runs away, Repeat 6 never does"), and **one per hardware report**.
 
 ## Rules for writing tests

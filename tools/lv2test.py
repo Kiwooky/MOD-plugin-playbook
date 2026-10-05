@@ -2,7 +2,7 @@
 
 In a plugin's test script:
 
-    from lv2test import Plugin, check, done, db, rms, centroid, tick_count, warble_cents, pluck_train
+    from lv2test import Plugin, check, done, db, rms, centroid, tick_count, warble_cents, pluck_train, rt60, onset_ms
     p = Plugin(order=['time', 'feedback', 'mix', 'tails', 'lv2_enabled'],
                defaults=dict(time=350, feedback=40, mix=35, tails=1, lv2_enabled=1),
                n_in=1, n_out=1)
@@ -132,6 +132,30 @@ def warble_cents(w, sr, f0, skip=0.0):
     f = np.diff(np.unwrap(np.angle(hilbert(seg)))) * sr / 2 / np.pi
     c = 1200 * np.log2(np.abs(uniform_filter1d(f, int(0.01 * sr))[2000:-2000]) / f0)
     return float(c.std())
+
+
+def rt60(w, sr):
+    """Reverb time from an impulse response (Schroeder backward integration, T30 x 2).
+
+    w: (frames,) or (frames, channels); channels are summed in energy. Needs at least
+    35 dB of clean decay in the render (render long enough, test with Vintage/noise off).
+    Taj Mahal: 5.63 / 5.58 / 5.72 s at 44.1 / 48 / 96 kHz for one setting.
+    """
+    e = np.asarray(w, dtype=float) ** 2
+    if e.ndim > 1:
+        e = e.sum(axis=1)
+    edc = np.cumsum(e[::-1])[::-1]
+    edc = 10 * np.log10(edc / edc[0] + 1e-30)
+    i5, i35 = np.argmax(edc < -5), np.argmax(edc < -35)
+    return (i35 - i5) / sr * 2
+
+
+def onset_ms(w, sr, frac=0.01):
+    """First sample above frac x the peak, in ms: pre-delay and latency checks."""
+    a = np.abs(np.asarray(w, dtype=float))
+    if a.ndim > 1:
+        a = a.sum(axis=1)
+    return float(np.argmax(a > a.max() * frac)) / sr * 1000
 
 
 def max_step(w):

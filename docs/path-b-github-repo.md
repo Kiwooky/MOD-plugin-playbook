@@ -14,6 +14,8 @@ dpf/                             vendored DPF, DSP-only (tools/vendor_dpf.sh)
 docs/spec.md, CHANGELOG.md, README.md, LICENSE, ARTWORK-LICENSE.md
 ```
 
+A repo created with GitHub's "Add a license" option starts with that licence in its initial commit (Taj Mahal's came with GPL-2 while the code was MIT). Check `LICENSE` matches what the person intends before the first push, and say if you replace it.
+
 `templates/plugin/` has all of this except `dpf/` and the docs. **Vendor DPF** (about 2.7 MB) with `tools/vendor_dpf.sh`: the builder fetches a GitHub tarball, which doesn't include submodules. Keep `dpf/utils/symbols`: the link step needs it.
 
 ## Identity
