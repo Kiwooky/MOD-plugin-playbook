@@ -1,6 +1,6 @@
 # Harvesting lessons from other sessions
 
-This playbook started from Taj Mahal's handover and the Can-Abyss build. Other plugin sessions (MultiPlay 20/20, EC-280, and yours) will have learned things that belong here.
+This playbook started from Taj Mahal's handover and the Can-Abyss build. MultiPlay 20/20 was harvested in 0.2.0. Other plugin sessions (EC-280, and yours) will have learned things that belong here.
 
 ## What to look for
 

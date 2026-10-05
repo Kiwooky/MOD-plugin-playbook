@@ -22,9 +22,9 @@ The URI is your repo URL (`https://github.com/<owner>/<repo>`), set in `DISTRHO_
 
 ## Shipping a build
 
-1. Run the gate (`tools/check.sh`). Also run `make` once for real, to prove the repo's own Makefile builds.
-2. Commit and push.
-3. Get the **full 40-character commit hash**: on GitHub, open *Commits* and use the copy button next to the short hash (the short hash alone won't work), or run `git rev-parse HEAD`.
+1. Run the gate (`tools/check.sh`). Also run `make` once for real, to prove the repo's own Makefile builds, and build the package file itself against a copy of the repo: `make -f tools/package_harness.mk PACKAGE=mod-plugin-builder/<name>/<name>.mk SRC=<copy> TGT=<dir> [CROSS=arm32|arm64]`.
+2. Commit and push. **The GitHub web uploader takes 100 files at a time** and a repo with vendored DPF has about 200, so use GitHub Desktop (clone, copy the files in, commit, push) or `git`. Hidden files (`.gitignore`) don't come along when you drag a folder in Finder; press Cmd+Shift+. to see them.
+3. Get the **full 40-character commit hash**: on GitHub, open *Commits* and use the copy button next to the short hash (the short hash alone won't work), or run `git rev-parse HEAD`. An agent without access to the account can look it up with `git ls-remote https://github.com/<owner>/<repo>` (public repos).
 4. Paste it into the package `.mk` as `<P>_VERSION`. You don't need to commit this edit before uploading: the builder reads the `.mk` you upload, then fetches the code at that hash.
 5. Upload the package `.mk` at builder.mod.audio and install. The filename must match the prefix (`nhe-can-abyss.mk` ↔ `NHE_CAN_ABYSS_`).
 
@@ -34,4 +34,4 @@ The URI is your repo URL (`https://github.com/<owner>/<repo>`), set in `DISTRHO_
 
 ## Store release
 
-MOD publishes community plugins in steps: a builder link for testers, then the beta store, then the official store. Keep a `docs/release.md` checklist: final ports, licence for code and artwork, a manual, presets, tested on each unit type, a demo, and a forum thread. **Freeze ports and the URI before anyone else uses it.**
+MOD publishes community plugins in steps: a builder link for testers, then the beta store, then the official store. Keep a `docs/release.md` checklist: final ports, licence for code and artwork, a manual, presets, tested on each unit type, a demo, and a forum thread. **Freeze ports and the URI before anyone else uses it.** Moving from a single-recipe prototype to a repo usually means a new URI: harvest the presets made on the prototype first and ship them as factory presets (`docs/presets.md`).

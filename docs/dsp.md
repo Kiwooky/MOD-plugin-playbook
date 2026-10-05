@@ -27,6 +27,7 @@ MOD units are small ARM computers. The Duo (Cortex-A7, 32-bit) is the tightest; 
 ## Outputs
 
 - **Soft-knee every output just under 0 dBFS, always.** Anything past 0 dBFS hard-clips at the converter. That was the "digital ticks" in Can-Abyss 1.0.2.
+- **Opposite-polarity outputs:** a classic stereo trick (dry + wet on one side, dry − wet on the other) is wide in stereo but cancels the wet if both outputs end up in one mono input. Say so in the README, and recommend one output for mono rigs.
 - **Level:** guitars into a MOD peak around −20 dBFS (the nominal input level isn't documented; this is from testing). Tune dynamics (compressors, sag, saturation thresholds) for that, not for a hot test signal.
 
 ## Delays and modulation
@@ -34,6 +35,18 @@ MOD units are small ARM computers. The Duo (Cortex-A7, 32-bit) is the tightest; 
 - **A modulated delay tap bends pitch by the rate the delay changes.** A fixed percentage of delay time gives far more pitch wobble on long delays than short ones. Scale speed-type modulation by current speed so the pitch deviation stays constant across delay times (Can-Abyss: from 20 cents of seasick wobble to a steady 4.5 at any time).
 - **Varispeed:** let the read point follow an integrated motor speed with inertia (a one-pole on speed), and the pitch bends like tape. A fixed-cell "disc" model costs far more at short times than a tape-style delay line.
 - **Hermite (4-point) interpolation** for audible taps; linear is fine for internal taps that are filtered anyway.
+
+## Clocked delays (BBD, early digital)
+
+Some originals don't move a tap: they change the clock that walks a fixed-length memory (bucket brigades, 1980s sampler-style delays). Then delay = length ÷ clock, sweeps bend pitch for free, and a frozen buffer varispeeds when the clock changes. Model it that way:
+
+- A fixed buffer read and written at a **virtual clock**. Per host sample, count the ticks that fall inside it; interpolate the input at each tick's exact time, and **integrate the zero-order-hold output over the host sample** (a box filter) so a clock faster than the host rate decimates cleanly.
+- Keep the original's fixed anti-alias and reconstruction filters at the host rate. When the clock runs slow, a little aliasing gets through, as on the hardware.
+- MultiPlay: 8-bit memory, 13:1 clock sweep, delays within 2 % at 44.1, 48 and 96 kHz, up to about 12 ticks per host sample, about 0.4 % of one x86 core at its fastest clock.
+
+## Companders (NE570 and similar)
+
+Put the compressor's level detector on its **output** and the expander's on its **input**. Then the expander sees the same envelope the compressor applied and the pair cancels, even during attacks, apart from what happened in between (quantisation, clipping). Sensing the compressor's input instead overshot every attack by about 16 dB in MultiPlay's first model.
 
 ## Noise
 

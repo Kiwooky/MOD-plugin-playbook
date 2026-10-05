@@ -12,6 +12,9 @@ One command: `tools/check.sh` (see `AGENTS.md`). This page explains what it runs
 | Audio tests, native | `tools/lv2host.c` + your test script (`tools/lv2test.py`) | DPF plugins won't load in `lv2apply`; this offline host does, with control changes at chosen samples (`@sample:port=value`) |
 | Same tests on the Duo build | qemu-arm | Catches ARM-only problems; results must match native |
 | CPU | `tools/bench.py` | Relative cost vs plugins you know; absolute only on the device |
+| Face clicks | `tools/face_click_test.py` | Every control clicked with mod-ui's own widget code, cleanly and with a 2 px wobble; runs the face script |
+| Path-B package | `tools/package_harness.mk` | Builds the package `.mk` against a local copy of the repo, native and cross |
+| Factory presets | `tools/presets_from_device.py` | Writes presets and reads every value back |
 
 Packages: `g++ g++-arm-linux-gnueabihf g++-aarch64-linux-gnu qemu-user lilv-utils git make` and Python `numpy scipy rdflib` (plus `pillow playwright` for faces).
 
@@ -34,6 +37,7 @@ Then **one test per promise in the spec** ("Wobble 10 is about 4× stock", "Repe
 - **Smooth envelopes on test signals.** Abrupt starts and stops are clicks; the first tick hunt in Can-Abyss found the test signal's own edges.
 - **Validate a detector before trusting it:** clean input must read 0, planted faults must be found. `tick_count` measures the *treble share* (clicks are almost all treble; bright notes are not), and was checked against planted clicks down to −46 dBFS, white noise, and clean plucks.
 - **Test the knob's shape, not only its ends.** "Runs away at 10" passed while the real edge sat at 9.3, a sliver of the knob nobody could find. Test both sides of an edge at playable positions.
+- **Measure delay times by cross-correlation** with a 20–50 ms noise burst, not by a threshold on the onset. Companders, filters and short delays smear onsets; MultiPlay's 1.2 ms flanger setting read as "no echo" with a threshold.
 - **Leave margin** in thresholds so native and ARM floating point don't flip a result.
 - **Make the gate fail on purpose once** (a wrong TTL default, an unused variable) to prove it can.
 

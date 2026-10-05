@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.0 — 2026-10-06
+
+Harvested from the MultiPlay 20/20 session (cookbook prototype → its own repo).
+
+- New tools: `face_click_test.py` (clicks every control with mod-ui's own widget code, with and without a 2 px wobble; runs the face script), `presets_from_device.py` (presets made on a unit → factory presets, read back and checked), `package_harness.mk` (builds a path-B package `.mk` against a local repo copy).
+- New doc: `presets.md`.
+- Lessons and topic docs: click zones for multi-position switches, `funcs.set_port_value`, swapping strip art with a class, the documentation button, dry at unity in bypass whatever Mix says, original-style bypass for recreations, clocked (BBD/early digital) delays, compander modelling, opposite-polarity outputs in mono, delay measurement by cross-correlation, the 100-file web upload limit, `git ls-remote` for the commit hash, URI changes orphaning presets, front panels over blurry schematics.
+- Verified: `face_click_test.py` passes MultiPlay's face and the template, and fails three controls when MultiPlay's film widgets come back; `presets_from_device.py` reproduces MultiPlay's ten factory presets exactly from the Duo's files and is re-runnable; `package_harness.mk` builds MultiPlay and the template natively and for arm64.
+- Not yet verified on a unit: the strip-swap face script, the documentation button.
+
 ## 0.1.0 — 2026-10-05
 
 First version, from the Taj Mahal handover and the Can-Abyss Delay build.

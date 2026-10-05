@@ -21,4 +21,6 @@ The same stages for both paths. Each ends with something checkable. Skipping one
 - **Ask one question at a time,** with a recommendation.
 - **Report numbers, not adjectives:** "peaks at −2.4 dBFS", "4.5 cents RMS", "1.2× Taj Mahal's CPU".
 - **Say what wasn't verified.** No test can tell you whether it's musical; ask.
+- **Run dependent steps in order.** Render the face after rebuilding the bundle; save or upload a file after the edit that changes it has finished, not in parallel with it.
+- **Tell people where files land** and give exact clicks or commands for their tools (GitHub Desktop, Finder, Terminal).
 - **Keep the docs honest as you go:** spec, CHANGELOG and README change in the same step as the code.

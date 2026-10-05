@@ -1,0 +1,245 @@
+#!/usr/bin/env python3
+"""Click every control on a modgui face, using mod-ui's own widget code, and
+report what each click does. Catches faces that look right but play wrong:
+toggles that drop clicks when the mouse moves slightly (the film widget treats
+a 2 px wobble as a drag), multi-position switches that only step forward and
+wrap, and face scripts that throw.
+
+    python3 tools/face_click_test.py <bundle>.lv2 [--mod-ui <mod-ui checkout>]
+
+Needs: pip install playwright rdflib; python3 -m playwright install chromium.
+mod-ui is cloned to $PB_CACHE/mod-ui (default ~/.cache/mod-playbook) if not given.
+
+How it works: the page loads mod-ui's html/js/lib/jquery-1.9.1.min.js and
+html/js/modgui.js, renders the face template with its stylesheet, and binds each
+mod-role="input-control-port" element with $(el).controlWidget({port, change})
+exactly as mod-ui does (port data from the TTL). The face script, if any, is
+evaluated the way mod-ui does ('method = ' + code) and started with a jQuery
+icon and funcs.set_port_value. Then each control is clicked at its centre
+twice cleanly and twice with a 2 px mouse wobble between press and release.
+
+Result per control:
+  toggles       FAIL if any click (clean or wobbly) leaves the value unchanged;
+                momentary ports must go on at press and off at release
+  enumerations  clicked at three spots (top/middle/bottom, or left/middle/right):
+                FAIL if a wobbly click is dropped or picks a different value;
+                NOTE if clicks only step forward and wrap (a position can't be picked)
+  knobs         info only (a click on a film knob steps it by one)
+The bypass (lv2:enabled) port is skipped: mod-ui's bypass widget handles it.
+Exit code 1 on any FAIL or a script error.
+"""
+import argparse, json, os, re, subprocess, sys, tempfile, asyncio
+import rdflib
+
+L = rdflib.Namespace('http://lv2plug.in/ns/lv2core#')
+MG = rdflib.Namespace('http://moddevices.com/ns/modgui#')
+RDF = rdflib.RDF
+RDFS = rdflib.RDFS
+
+
+def load_bundle(bundle):
+    g = rdflib.Graph()
+    for fn in os.listdir(bundle):
+        if fn.endswith('.ttl'):
+            g.parse(os.path.join(bundle, fn), format='turtle')
+    gui = next(g.objects(None, MG['gui']))
+
+    def rel(k):
+        v = g.value(gui, MG[k])
+        if v is None:
+            return None
+        p = str(v).replace('file://', '')
+        return p if os.path.isabs(p) else os.path.join(bundle, p)
+
+    ports = {}
+    for p in g.objects(None, L['port']):
+        sym = g.value(p, L['symbol'])
+        if sym is None or (p, RDF.type, L['ControlPort']) not in g or (p, RDF.type, L['InputPort']) not in g:
+            continue
+        if g.value(p, L['designation']) is not None:   # lv2:enabled = the bypass widget, tested by mod-ui itself
+            continue
+        props = [str(o).split('#')[-1] for o in g.objects(p, L['portProperty'])]
+        sps = sorted(({'value': float(g.value(s, RDF.value)), 'label': str(g.value(s, RDFS.label))}
+                      for s in g.objects(p, L['scalePoint'])), key=lambda d: d['value'])
+        ports[str(sym)] = {
+            'symbol': str(sym),
+            'ranges': {'minimum': float(g.value(p, L['minimum'])), 'maximum': float(g.value(p, L['maximum'])),
+                       'default': float(g.value(p, L['default']))},
+            'properties': props, 'scalePoints': sps,
+        }
+    return {'res': rel('resourcesDirectory'), 'html': rel('iconTemplate'), 'css': rel('stylesheet'),
+            'js': rel('javascript'), 'ports': ports}
+
+
+def mod_ui_path(arg):
+    if arg:
+        return arg
+    cache = os.environ.get('PB_CACHE', os.path.expanduser('~/.cache/mod-playbook'))
+    path = os.path.join(cache, 'mod-ui')
+    if not os.path.isdir(path):
+        os.makedirs(cache, exist_ok=True)
+        subprocess.run(['git', 'clone', '-q', '--depth', '1', 'https://github.com/mod-audio/mod-ui.git', path], check=True)
+    return path
+
+
+PAGE = r'''<html><head><meta charset="utf-8">
+<script src="file://%(modui)s/html/js/lib/jquery-1.9.1.min.js"></script>
+<script>var isSDK = true, desktop = null, VERSION = 'test';</script>
+<script src="file://%(modui)s/html/js/modgui.js"></script>
+<style>body{margin:0}%(css)s</style></head><body>%(html)s
+<script>
+window.log = []; window.errors = [];
+var PORTS = %(ports)s;
+var root = $('[class*="mod-pedal"]').first();
+function bind(el, port) {
+  $(el).controlWidget({ port: port, dummy: false,
+    change: function (e, v) { log.push([port.symbol, v]); fire({ type: 'change', symbol: port.symbol, value: v }); } });
+}
+$('[mod-role="input-control-port"]').each(function () {
+  var p = PORTS[this.getAttribute('mod-port-symbol')]; if (p) bind(this, p);
+});
+var method = null, code = %(script)s;
+if (code) { try { eval('method = ' + code); } catch (e) { errors.push('script does not parse: ' + e); } }
+var funcs = { set_port_value: function (s, v) {
+  log.push([s, v]);
+  $('[mod-role="input-control-port"][mod-port-symbol="' + s + '"]').controlWidget('setValue', v, true);
+  fire({ type: 'change', symbol: s, value: v }); } };
+function fire(ev) {
+  if (!method) return;
+  ev.icon = root; ev.data = {}; ev.api_version = 3;
+  try { method(ev, funcs); } catch (e) { errors.push('script threw on ' + ev.type + ': ' + e); method = null; }
+}
+setTimeout(function () {
+  var ports = Object.keys(PORTS).map(function (k) { return { symbol: k, value: PORTS[k].ranges['default'] }; });
+  fire({ type: 'start', ports: ports, parameters: [] });
+  window.ready = true;
+}, 300);
+</script></body></html>'''
+
+
+async def run(info, modui):
+    from playwright.async_api import async_playwright
+    res = os.path.abspath(info['res'])
+    css = open(info['css']).read().replace('{{{cns}}}', '').replace('{{{ns}}}', '')
+    css = re.sub(r'url\(/resources/([^)]+)\)', lambda m: 'url(file://%s/%s)' % (res, m.group(1)), css)
+    html = open(info['html']).read()
+    html = re.sub(r'\{\{#.*?\}\}.*?\{\{/.*?\}\}', '', html, flags=re.S).replace('{{{cns}}}', '').replace('{{{ns}}}', '')
+    script = open(info['js']).read() if info['js'] and os.path.exists(info['js']) else ''
+    page_html = PAGE % {'modui': os.path.abspath(modui), 'css': css, 'html': html,
+                        'ports': json.dumps(info['ports']), 'script': json.dumps(script)}
+    fails, notes = [], []
+    with tempfile.TemporaryDirectory() as td:
+        fn = os.path.join(td, 'face.html')
+        open(fn, 'w').write(page_html)
+        async with async_playwright() as p:
+            b = await p.chromium.launch()
+            pg = await b.new_page(viewport={'width': 1400, 'height': 1000})
+            pageerr = []
+            pg.on('pageerror', lambda e: pageerr.append(str(e)))
+            await pg.goto('file://' + fn)
+            await pg.wait_for_function('window.ready === true', timeout=5000)
+            await pg.wait_for_timeout(300)
+            cur = {s: p['ranges']['default'] for s, p in info['ports'].items()}
+            for sym, port in info['ports'].items():
+                el = await pg.query_selector('[mod-role="input-control-port"][mod-port-symbol="%s"]' % sym)
+                if el is None:
+                    notes.append('%-14s not on the face (settings only)' % sym)
+                    continue
+                box = await el.bounding_box()
+                cx, cy = box['x'] + box['width'] / 2, box['y'] + box['height'] / 2
+                props = port['properties']
+                kind = 'toggle' if 'toggled' in props else 'enum' if 'enumeration' in props else 'knob'
+                momentary = 'preferMomentaryOnByDefault' in props or 'preferMomentaryOffByDefault' in props
+
+                async def click(x, y, wobble):
+                    await pg.evaluate('log = []')
+                    await pg.mouse.move(x, y)
+                    await pg.mouse.down()
+                    held = [v for s, v in await pg.evaluate('log.slice()') if s == sym]
+                    if wobble:
+                        await pg.mouse.move(x + 1, y - wobble)
+                    await pg.mouse.up()
+                    await pg.wait_for_timeout(30)
+                    after = [v for s, v in await pg.evaluate('log') if s == sym]
+                    if after:
+                        cur[sym] = after[-1]
+                    return held, after, cur[sym]
+
+                if kind == 'toggle':
+                    if momentary:
+                        ok = True
+                        for w in (0, 0, 2, 2):
+                            held, after, _ = await click(cx, cy, w)
+                            ok &= bool(held) and held[-1] == port['ranges']['maximum'] and bool(after) and after[-1] == port['ranges']['minimum']
+                        line = '%-14s momentary   press = on, release = off on every click: %s' % (sym, 'yes' if ok else 'NO')
+                    else:
+                        seq, ok = [], True
+                        for w in (0, 0, 2, 2):
+                            before = cur[sym]
+                            _, _, v = await click(cx, cy, w)
+                            seq.append('%s%g' % ('~' if w else '', v))
+                            ok &= v != before
+                        line = '%-14s toggle      value after each click (~ = 2 px wobble): %s' % (sym, ', '.join(seq))
+                    (notes if ok else fails).append(line if ok else 'FAIL ' + line)
+                elif kind == 'enum':
+                    pts = [sp['value'] for sp in port['scalePoints']]
+                    spots = [(cx, box['y'] + box['height'] * f) for f in (0.15, 0.5, 0.85)] if box['height'] >= box['width'] \
+                        else [(box['x'] + box['width'] * f, cy) for f in (0.15, 0.5, 0.85)]
+                    picks = []
+                    for x, y in spots:
+                        _, _, v = await click(x, y, 0)
+                        picks.append(v)
+                    again = {}
+                    for i in (2, 0, 1):          # same spots in another order
+                        _, _, v = await click(*spots[i], 0)
+                        again[i] = v
+                    consistent = all(again[i] == picks[i] for i in range(3))
+                    if consistent and len(set(picks)) == len(picks):
+                        mode = 'position'   # each spot selects its own value
+                        ok = True
+                        for (x, y), want in zip(spots, picks):
+                            _, _, v = await click(x, y, 2)
+                            ok &= v == want
+                    else:
+                        mode = 'cycle'      # every click steps to the next value
+                        ok = True
+                        for _ in range(2):
+                            before = cur[sym]
+                            _, _, v = await click(cx, cy, 2)
+                            ok &= v != before
+                    line = '%-14s switch      clicks at three spots gave %s; with a 2 px wobble %s' % (
+                        sym, ', '.join('%g' % v for v in picks), 'it still works' if ok else 'the click is dropped')
+                    (notes if ok else fails).append(line if ok else 'FAIL ' + line)
+                    if mode == 'cycle' and len(pts) > 2:
+                        notes.append('NOTE %-9s clicks only step forward and wrap: clicking a position cannot select it '
+                                     '(fix: click zones calling funcs.set_port_value, docs/modgui.md)' % sym)
+                else:
+                    seq = []
+                    for w in (0, 2):
+                        _, _, v = await click(cx, cy, w)
+                        seq.append('%s%g' % ('~' if w else '', v))
+                    notes.append('%-14s knob        a click steps it: %s (info)' % (sym, ', '.join(seq)))
+            errs = await pg.evaluate('errors') + pageerr
+            await b.close()
+    for e in errs:
+        fails.append('FAIL script: ' + e)
+    return fails, notes
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__.split('\n')[0])
+    ap.add_argument('bundle')
+    ap.add_argument('--mod-ui')
+    a = ap.parse_args()
+    info = load_bundle(a.bundle.rstrip('/'))
+    fails, notes = asyncio.run(run(info, mod_ui_path(a.mod_ui)))
+    for n in notes:
+        print(n)
+    for f in fails:
+        print(f)
+    print('\n%d failures' % len(fails))
+    sys.exit(1 if fails else 0)
+
+
+if __name__ == '__main__':
+    main()

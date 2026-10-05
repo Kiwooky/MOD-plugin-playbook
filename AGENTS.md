@@ -43,7 +43,8 @@ Ask these before anything else, one at a time, and record the answers at the top
 - **Soft-knee the outputs.** Anything past 0 dBFS hard-clips at the converter and sounds like digital ticks.
 - **Test at guitar level** (peaks around −20 dBFS), with smooth-enveloped test signals.
 - **Ports and the URI are frozen once shared.** Never reorder, rename or remove them afterwards.
-- **Buttons and footswitches use `mod-widget="switch"`.** Momentary-by-default only when the person asks.
+- **Buttons and footswitches use `mod-widget="switch"`.** Momentary-by-default only when the person asks. Run `tools/face_click_test.py` on every face change.
+- **Bypass leaves the dry at unity whatever Mix says.**
 - **Ask about the human's ears.** Tests prove behaviour; only playing it proves it is musical. After each upload, ask what they heard.
 
 ## 4. Map of this repo
@@ -60,6 +61,7 @@ Ask these before anything else, one at a time, and record the answers at the top
 | `docs/hardware-feedback.md` | Turning "it sounds wrong" into a fix |
 | `docs/lessons.md` | Every rule with the incident behind it |
 | `docs/known-mod-issues.md` | MOD-side bugs that look like plugin bugs |
+| `docs/presets.md` | Factory presets, and carrying over presets made on a unit |
 | `templates/plugin/` | A complete, tested template plugin (both paths) |
 | `templates/spec-template.md`, `templates/hardware-report.md` | Fill-in templates |
-| `tools/` | check.sh, assemble_recipe.py, harness.mk, lv2host.c, lv2test.py, ttlcmp.py, bench.py, placeholder_face.py, render_face.py, knob_filmstrip.py, vendor_dpf.sh |
+| `tools/` | check.sh, assemble_recipe.py, harness.mk, package_harness.mk, lv2host.c, lv2test.py, ttlcmp.py, bench.py, placeholder_face.py, render_face.py, face_click_test.py, presets_from_device.py, knob_filmstrip.py, vendor_dpf.sh |
