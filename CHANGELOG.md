@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.0 — 2026-10-06
+
+Harvested from the EC-280 session (Dynacord EC 280 bucket-brigade echo: cookbook prototype → its own repo, built without this playbook).
+
+- `face_click_test.py`: follows mod-ui's script semantics (one persistent `event.data`; no `change` back for the script's own `set_port_value`; values clamped and unchanged sets skipped, as in `setPortValue`); presses from each control's default; touch taps for toggles; finds script-driven controls by the attribute naming their port and presses them with mouse, wobble and touch.
+- Docs: script-driven controls and radio banks with "hold to add", measuring a printed knob sweep, fitting positions to a mockup, aligning output jacks with printed legends, renaming labels but never symbols (`modgui.md`); landing smoothers, noise floors in loops, resistor mixing networks, noise as modulation (`dsp.md`); ARM vs x86 in clock-phase code, the rdflib `index` trap, reading what mod-ui hands a face (`testing.md`); `scp -O` on macOS (`presets.md`). Sixteen lessons with their incidents.
+- Verified: the new `face_click_test.py` passes EC-280 1.0.0, MultiPlay and the template; fails exactly the three switches that failed on a Duo when EC-280's 1.0.1 face is put back; fails three switches when the face script's switch handler is emptied.
+- Not yet verified on a unit: EC-280's script-driven switches (1.0.2 onward), the output jack alignment.
+
 ## 0.2.0 — 2026-10-06
 
 Harvested from the MultiPlay 20/20 session (cookbook prototype → its own repo).

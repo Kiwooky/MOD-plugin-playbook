@@ -3,7 +3,8 @@
 report what each click does. Catches faces that look right but play wrong:
 toggles that drop clicks when the mouse moves slightly (the film widget treats
 a 2 px wobble as a drag), multi-position switches that only step forward and
-wrap, and face scripts that throw.
+wrap, controls driven by a face script that don't respond, and face scripts that
+throw.
 
     python3 tools/face_click_test.py <bundle>.lv2 [--mod-ui <mod-ui checkout>]
 
@@ -15,8 +16,18 @@ html/js/modgui.js, renders the face template with its stylesheet, and binds each
 mod-role="input-control-port" element with $(el).controlWidget({port, change})
 exactly as mod-ui does (port data from the TTL). The face script, if any, is
 evaluated the way mod-ui does ('method = ' + code) and started with a jQuery
-icon and funcs.set_port_value. Then each control is clicked at its centre
-twice cleanly and twice with a 2 px mouse wobble between press and release.
+icon and funcs.set_port_value, behaving as mod-ui does: event.data is one
+object kept for the face's lifetime, and a value the script sets with
+set_port_value is NOT reported back to it as a 'change' (mod-ui's "from-js"
+source). Then each control is clicked at its centre twice cleanly and twice with
+a 2 px mouse wobble between press and release, starting from its TTL default,
+and every toggle is tapped four times on a touch screen.
+
+Controls drawn by the face script instead of a mod-role widget are found by
+any attribute whose value is the port symbol (e.g. <div my-switch="tails">):
+script toggles get the same click and tap checks; other script-driven ports
+(button banks, click zones) are clicked one element at a time, cleanly and then
+with a wobble.
 
 Result per control:
   toggles       FAIL if any click (clean or wobbly) leaves the value unchanged;
@@ -25,6 +36,9 @@ Result per control:
                 FAIL if a wobbly click is dropped or picks a different value;
                 NOTE if clicks only step forward and wrap (a position can't be picked)
   knobs         info only (a click on a film knob steps it by one)
+  script-driven FAIL if a toggle doesn't change on every click and tap, if a
+                wobbly click gives a different value from a clean one, or if no
+                element of the port ever sets a value
 The bypass (lv2:enabled) port is skipped: mod-ui's bypass widget handles it.
 Exit code 1 on any FAIL or a script error.
 """
@@ -100,13 +114,20 @@ $('[mod-role="input-control-port"]').each(function () {
 });
 var method = null, code = %(script)s;
 if (code) { try { eval('method = ' + code); } catch (e) { errors.push('script does not parse: ' + e); } }
+var VALUES = {}; Object.keys(PORTS).forEach(function (k) { VALUES[k] = PORTS[k].ranges['default']; });
+var DATA = {};   // mod-ui keeps one event.data per face (this.jsData)
 var funcs = { set_port_value: function (s, v) {
-  log.push([s, v]);
-  $('[mod-role="input-control-port"][mod-port-symbol="' + s + '"]').controlWidget('setValue', v, true);
-  fire({ type: 'change', symbol: s, value: v }); } };
+  // as mod-ui's setPortValue(symbol, value, "from-js"): clamp, skip if unchanged,
+  // update widgets, and do NOT send a 'change' event back to the script
+  var p = PORTS[s]; if (!p) return;
+  v = Math.min(p.ranges.maximum, Math.max(p.ranges.minimum, v));
+  if (VALUES[s] === v) return;
+  VALUES[s] = v; log.push([s, v]);
+  $('[mod-role="input-control-port"][mod-port-symbol="' + s + '"]').controlWidget('setValue', v, true); } };
 function fire(ev) {
+  if (ev.type === 'change') VALUES[ev.symbol] = ev.value;
   if (!method) return;
-  ev.icon = root; ev.data = {}; ev.api_version = 3;
+  ev.icon = root; ev.data = DATA; ev.api_version = 3;
   try { method(ev, funcs); } catch (e) { errors.push('script threw on ' + ev.type + ': ' + e); method = null; }
 }
 setTimeout(function () {
@@ -133,17 +154,75 @@ async def run(info, modui):
         open(fn, 'w').write(page_html)
         async with async_playwright() as p:
             b = await p.chromium.launch()
-            pg = await b.new_page(viewport={'width': 1400, 'height': 1000})
+            ctx = await b.new_context(viewport={'width': 1400, 'height': 1000}, has_touch=True)
+            pg = await ctx.new_page()
             pageerr = []
             pg.on('pageerror', lambda e: pageerr.append(str(e)))
             await pg.goto('file://' + fn)
             await pg.wait_for_function('window.ready === true', timeout=5000)
             await pg.wait_for_timeout(300)
             cur = {s: p['ranges']['default'] for s, p in info['ports'].items()}
+
+            async def script_elements(sym):
+                # elements with any attribute (other than mod-port-symbol) whose value is the symbol
+                return await pg.query_selector_all('xpath=//*[@*[name()!="mod-port-symbol" and .="%s"]]' % sym)
+
+            async def press(sym, x, y, wobble=0, touch=False):
+                await pg.evaluate('log = []')
+                if touch:
+                    await pg.touchscreen.tap(x, y)
+                    held = []
+                else:
+                    await pg.mouse.move(x, y)
+                    await pg.mouse.down()
+                    held = [v for s, v in await pg.evaluate('log.slice()') if s == sym]
+                    if wobble:
+                        await pg.mouse.move(x + 1, y - wobble)
+                    await pg.mouse.up()
+                await pg.wait_for_timeout(60)
+                after = [v for s, v in await pg.evaluate('log') if s == sym]
+                if after:
+                    cur[sym] = after[-1]
+                return held, after, cur[sym]
+
             for sym, port in info['ports'].items():
                 el = await pg.query_selector('[mod-role="input-control-port"][mod-port-symbol="%s"]' % sym)
                 if el is None:
-                    notes.append('%-14s not on the face (settings only)' % sym)
+                    els = await script_elements(sym)
+                    if not els:
+                        notes.append('%-14s not on the face (settings only)' % sym)
+                        continue
+                    props = port['properties']
+                    if 'toggled' in props or (len(els) == 1 and len(port['scalePoints']) == 2):
+                        box = await els[0].bounding_box()
+                        cx, cy = box['x'] + box['width'] / 2, box['y'] + box['height'] / 2
+                        seq, ok = [], True
+                        for w, t in ((0, 0), (0, 0), (2, 0), (2, 0), (0, 1), (0, 1), (0, 1), (0, 1)):
+                            before = cur[sym]
+                            _, _, v = await press(sym, cx, cy, w, bool(t))
+                            seq.append('%s%g' % ('~' if w else '^' if t else '', v))
+                            ok &= v != before
+                        await pg.wait_for_timeout(1200)   # scripts often ignore emulated mouse events for ~1 s after a touch
+                        line = '%-14s script toggle  after each press (~ = wobble, ^ = touch tap): %s' % (sym, ', '.join(seq))
+                        (notes if ok else fails).append(line if ok else 'FAIL ' + line)
+                    else:
+                        clean, ok, any_set = [], True, False
+                        for e in els:
+                            box = await e.bounding_box()
+                            x, y = box['x'] + box['width'] / 2, box['y'] + box['height'] / 2
+                            _, after, v = await press(sym, x, y, 0)
+                            any_set |= bool(after)
+                            clean.append(v)
+                        for e, want in reversed(list(zip(els, clean))):
+                            box = await e.bounding_box()
+                            x, y = box['x'] + box['width'] / 2, box['y'] + box['height'] / 2
+                            _, after, v = await press(sym, x, y, 2)
+                            ok &= v == want
+                        ok &= any_set
+                        line = '%-14s script control %d elements; a clean click on each gave %s; wobbly clicks %s' % (
+                            sym, len(els), ', '.join('%g' % v for v in clean),
+                            'agree' if ok else ('never set a value' if not any_set else 'gave different values'))
+                        (notes if ok else fails).append(line if ok else 'FAIL ' + line)
                     continue
                 box = await el.bounding_box()
                 cx, cy = box['x'] + box['width'] / 2, box['y'] + box['height'] / 2
@@ -151,19 +230,8 @@ async def run(info, modui):
                 kind = 'toggle' if 'toggled' in props else 'enum' if 'enumeration' in props else 'knob'
                 momentary = 'preferMomentaryOnByDefault' in props or 'preferMomentaryOffByDefault' in props
 
-                async def click(x, y, wobble):
-                    await pg.evaluate('log = []')
-                    await pg.mouse.move(x, y)
-                    await pg.mouse.down()
-                    held = [v for s, v in await pg.evaluate('log.slice()') if s == sym]
-                    if wobble:
-                        await pg.mouse.move(x + 1, y - wobble)
-                    await pg.mouse.up()
-                    await pg.wait_for_timeout(30)
-                    after = [v for s, v in await pg.evaluate('log') if s == sym]
-                    if after:
-                        cur[sym] = after[-1]
-                    return held, after, cur[sym]
+                async def click(x, y, wobble, sym=sym):
+                    return await press(sym, x, y, wobble)
 
                 if kind == 'toggle':
                     if momentary:
@@ -174,12 +242,13 @@ async def run(info, modui):
                         line = '%-14s momentary   press = on, release = off on every click: %s' % (sym, 'yes' if ok else 'NO')
                     else:
                         seq, ok = [], True
-                        for w in (0, 0, 2, 2):
+                        for w, t in ((0, 0), (0, 0), (2, 0), (2, 0), (0, 1), (0, 1), (0, 1), (0, 1)):
                             before = cur[sym]
-                            _, _, v = await click(cx, cy, w)
-                            seq.append('%s%g' % ('~' if w else '', v))
+                            _, _, v = await press(sym, cx, cy, w, bool(t))
+                            seq.append('%s%g' % ('~' if w else '^' if t else '', v))
                             ok &= v != before
-                        line = '%-14s toggle      value after each click (~ = 2 px wobble): %s' % (sym, ', '.join(seq))
+                        await pg.wait_for_timeout(1200)
+                        line = '%-14s toggle      value after each press (~ = 2 px wobble, ^ = touch tap): %s' % (sym, ', '.join(seq))
                     (notes if ok else fails).append(line if ok else 'FAIL ' + line)
                 elif kind == 'enum':
                     pts = [sp['value'] for sp in port['scalePoints']]

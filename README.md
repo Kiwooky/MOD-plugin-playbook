@@ -14,7 +14,7 @@ It works with **any coding agent** (Claude Code, Codex CLI, Cursor, Gemini CLI, 
 - **A tested template plugin** (`templates/plugin/`) that builds both ways: sources in normal folders, assembled into a single `.mk` or built as a repo.
 - **One-command checks** (`tools/check.sh`): native + Duo + Duo X/Dwarf builds through the builder's own steps, the hand-written TTL compared with DPF's generator, a load check, and audio tests run natively and on the Duo build under emulation. Compiler warnings fail it.
 - **Instant placeholder faces** (`tools/placeholder_face.py`) drawn from the TTL, so every plugin ships with a face from its first upload.
-- **Face click tests** (`tools/face_click_test.py`): every control clicked with mod-ui's own widget code, so a face that drops clicks fails before it reaches a unit.
+- **Face click tests** (`tools/face_click_test.py`): every control pressed with mod-ui's own widget code (mouse, wobble and touch), including controls drawn by a face script, so a face that drops clicks fails before it reaches a unit.
 - **Factory presets from a unit** (`tools/presets_from_device.py`): presets made on the MOD become presets that ship with the plugin.
 - **A test library** (`tools/lv2test.py`): an offline host runner plus helpers for levels, brightness, pitch wobble, clicks and a validated tick detector.
 - **The rules** (`docs/`), each with the incident that taught it.

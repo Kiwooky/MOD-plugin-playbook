@@ -15,7 +15,7 @@ ssh root@192.168.51.1 "ls /root/.lv2"
 ssh root@192.168.51.1 "cd /root/.lv2 && tar czf - <name>-*.lv2" > ~/Desktop/presets.tgz
 ```
 
-The second form puts the file somewhere the person can find. `scp root@192.168.51.1:file .` leaves it in whatever folder the terminal was in, which people often can't find. Grab other plugins' presets in the same command if they'll be needed later.
+The second form puts the file somewhere the person can find. **If someone uses `scp` from a recent Mac, it needs `-O`:** without it, macOS `scp` speaks SFTP, which the MOD doesn't serve, and fails with "subsystem request failed on channel 0" (verified). The password is typed blind; a mistyped one reads as "Permission denied". `scp root@192.168.51.1:file .` leaves it in whatever folder the terminal was in, which people often can't find. Grab other plugins' presets in the same command if they'll be needed later.
 
 ## Ship them
 

@@ -43,7 +43,7 @@ Ask these before anything else, one at a time, and record the answers at the top
 - **Soft-knee the outputs.** Anything past 0 dBFS hard-clips at the converter and sounds like digital ticks.
 - **Test at guitar level** (peaks around −20 dBFS), with smooth-enveloped test signals.
 - **Ports and the URI are frozen once shared.** Never reorder, rename or remove them afterwards.
-- **Buttons and footswitches use `mod-widget="switch"`.** Momentary-by-default only when the person asks. Run `tools/face_click_test.py` on every face change.
+- **Buttons and footswitches use `mod-widget="switch"`.** Momentary-by-default only when the person asks. Run `tools/face_click_test.py` on every face change, and before blaming the device for a control that doesn't respond.
 - **Bypass leaves the dry at unity whatever Mix says.**
 - **Ask about the human's ears.** Tests prove behaviour; only playing it proves it is musical. After each upload, ask what they heard.
 
