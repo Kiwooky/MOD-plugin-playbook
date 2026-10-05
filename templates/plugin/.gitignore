@@ -1,0 +1,5 @@
+dist/
+bin/
+build/
+__pycache__/
+tools/lv2host

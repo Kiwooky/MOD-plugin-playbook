@@ -1,0 +1,22 @@
+<div class="mod-pedal simpleecho{{{cns}}}">
+    <div mod-role="drag-handle" class="mod-drag-handle"></div>
+    <div class="pb-knob pb-time" title="Time" mod-role="input-control-port" mod-port-symbol="time"></div>
+    <div class="pb-knob pb-feedback" title="Feedback" mod-role="input-control-port" mod-port-symbol="feedback"></div>
+    <div class="pb-knob pb-mix" title="Mix" mod-role="input-control-port" mod-port-symbol="mix"></div>
+    <div class="pb-switch pb-tails" title="Tails" mod-widget="switch" mod-role="input-control-port" mod-port-symbol="tails"></div>
+    <div class="pb-foot" title="Bypass" mod-role="bypass"></div>
+    <div class="mod-pedal-input">
+        {{#effect.ports.audio.input}}
+        <div class="mod-input mod-input-disconnected" title="{{name}}" mod-role="input-audio-port" mod-port-symbol="{{symbol}}">
+            <div class="mod-pedal-input-image"></div>
+        </div>
+        {{/effect.ports.audio.input}}
+    </div>
+    <div class="mod-pedal-output">
+        {{#effect.ports.audio.output}}
+        <div class="mod-output mod-output-disconnected" title="{{name}}" mod-role="output-audio-port" mod-port-symbol="{{symbol}}">
+            <div class="mod-pedal-output-image"></div>
+        </div>
+        {{/effect.ports.audio.output}}
+    </div>
+</div>

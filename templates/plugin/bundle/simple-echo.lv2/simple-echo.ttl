@@ -1,0 +1,77 @@
+@prefix doap:   <http://usefulinc.com/ns/doap#> .
+@prefix foaf:   <http://xmlns.com/foaf/0.1/> .
+@prefix lv2:    <http://lv2plug.in/ns/lv2core#> .
+@prefix pprops: <http://lv2plug.in/ns/ext/port-props#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix units:  <http://lv2plug.in/ns/extensions/units#> .
+
+<urn:mod-cookbook:simple-echo>
+    a lv2:Plugin , lv2:DelayPlugin ;
+    doap:name "Simple Echo" ;
+    doap:license <http://opensource.org/licenses/MIT> ;
+    doap:maintainer [ foaf:name "MOD Cookbook" ] ;
+    rdfs:comment "Template echo for the MOD plugin playbook." ;
+    lv2:minorVersion 2 ;
+    lv2:microVersion 0 ;
+    lv2:optionalFeature lv2:hardRTCapable ;
+    lv2:requiredFeature <http://lv2plug.in/ns/ext/options#options> ,
+                        <http://lv2plug.in/ns/ext/urid#map> ;
+    lv2:extensionData <http://lv2plug.in/ns/ext/options#interface> ;
+    lv2:port [
+        a lv2:InputPort , lv2:AudioPort ;
+        lv2:index 0 ;
+        lv2:symbol "in" ;
+        lv2:name "In"
+    ] , [
+        a lv2:OutputPort , lv2:AudioPort ;
+        lv2:index 1 ;
+        lv2:symbol "out" ;
+        lv2:name "Out"
+    ] , [
+        a lv2:InputPort , lv2:ControlPort ;
+        lv2:index 2 ;
+        lv2:symbol "time" ;
+        lv2:name "Time" ;
+        lv2:default 350 ;
+        lv2:minimum 20 ;
+        lv2:maximum 2000 ;
+        lv2:portProperty pprops:logarithmic ;
+        units:unit units:ms
+    ] , [
+        a lv2:InputPort , lv2:ControlPort ;
+        lv2:index 3 ;
+        lv2:symbol "feedback" ;
+        lv2:name "Feedback" ;
+        lv2:default 40 ;
+        lv2:minimum 0 ;
+        lv2:maximum 95 ;
+        units:unit units:pc
+    ] , [
+        a lv2:InputPort , lv2:ControlPort ;
+        lv2:index 4 ;
+        lv2:symbol "mix" ;
+        lv2:name "Mix" ;
+        lv2:default 35 ;
+        lv2:minimum 0 ;
+        lv2:maximum 100 ;
+        units:unit units:pc
+    ] , [
+        a lv2:InputPort , lv2:ControlPort ;
+        lv2:index 5 ;
+        lv2:symbol "tails" ;
+        lv2:name "Tails" ;
+        lv2:default 1 ;
+        lv2:minimum 0 ;
+        lv2:maximum 1 ;
+        lv2:portProperty lv2:integer , lv2:toggled
+    ] , [
+        a lv2:InputPort , lv2:ControlPort ;
+        lv2:index 6 ;
+        lv2:symbol "lv2_enabled" ;
+        lv2:name "Enabled" ;
+        lv2:default 1 ;
+        lv2:minimum 0 ;
+        lv2:maximum 1 ;
+        lv2:portProperty lv2:integer , lv2:toggled ;
+        lv2:designation lv2:enabled
+    ] .
