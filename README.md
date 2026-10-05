@@ -2,7 +2,7 @@
 
 **Build MOD Duo / Duo X / Dwarf plugins with an AI agent, and get them right on the device, not just in the chat.**
 
-The [MOD plugin cookbook](https://github.com/mod-audio/mod-plugin-cookbook) shows how to describe a plugin and get a single `.mk` file for the MOD Online Builder. This playbook is what came after: the process, tools and hard-won rules from building several plugins that shipped to real hardware (Taj Mahal, MultiPlay 20/20, Can-Abyss Delay and others).
+The [MOD plugin cookbook](https://github.com/mod-audio/mod-plugin-cookbook) shows how to describe a plugin and get a single `.mk` file for the MOD Online Builder. This playbook is what came after: the process, tools and hard-won rules from building several plugins that shipped to real hardware.
 
 It works with **any coding agent** (Claude Code, Codex CLI, Cursor, Gemini CLI, or a chat with a code sandbox). Nothing in it depends on one AI vendor.
 
