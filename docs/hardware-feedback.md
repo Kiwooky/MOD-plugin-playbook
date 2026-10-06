@@ -29,7 +29,7 @@ If the report doesn't say which version or settings, **ask before changing anyth
 | --- | --- | --- |
 | "Turned hiss and hum off after 5 seconds" | Feature not wanted | Removed; kept the movement as a new control |
 | "Sag a bit too subtle" | Tuned for hot signals | Full effect at about −20 dBFS |
-| "Digital ticks here and there" | Output over 0 dBFS + aliasing in loops | Output soft knee, 2× oversampled saturators, loop roll-off |
+| "Digital ticks here and there" | Output over 0 dBFS + aliasing in loops | Wet-path soft limit (feedback effects), 2× oversampled saturators, loop roll-off |
 | "Repeat and Reverb seem to do the same thing" | Both made clean repeats at near-equal spacing | Reverb became a diffused wash |
 | "It will not oscillate any more" | Runaway edge moved to a 7% sliver of the knob | Edge mapped on a grid and moved to 8–10, Reverb can tip it |
 | "Hold should be latching" | Momentary-by-default property | Removed it |

@@ -22,20 +22,26 @@ lv2:extensionData <http://lv2plug.in/ns/ext/options#interface> ;
 - **Logarithmic knobs** (`pprops:logarithmic` + DPF `kParameterIsLogarithmic`) for time and frequency. mod-ui maps their position on a log scale.
 - **Enumerations** (`lv2:enumeration` + `lv2:scalePoint`, DPF `enumValues`) for switches with labelled positions.
 
-## Bypass in the plugin (keeps tails)
+## Bypass in the plugin
 
-If the plugin has an `lv2:designation lv2:enabled` port, mod-host does **not** hard-bypass. It sets the port (1 = active) and keeps calling `run()` (mod-host `effects.c`, mod-ui `host.py`).
+Without a bypass port, mod-host bypasses by copying the input straight to the output from the next audio block: an instant switch, no crossfade (mod-host `effects.c`, source-checked). On a processed signal (a driven fuzz, a wet delay) that's a step in the waveform, heard as a pop. If the plugin has an `lv2:designation lv2:enabled` port, mod-host does **not** hard-bypass. It sets the port (1 = active) and keeps calling `run()` (mod-host `effects.c`, mod-ui `host.py`), so the plugin can fade.
+
+Every plugin gets this: the player hears a standard bypass (effect out, dry through at unity), just without the click. Tails are a separate, optional extra for effects that have one.
 
 - **DPF:** `p.initDesignation(kParameterDesignationBypass)`, last in the enum. DPF inverts the value internally (1 = bypassed).
 - **TTL:** symbol `lv2_enabled`, name "Enabled", default 1, `lv2:integer , lv2:toggled`, `lv2:designation lv2:enabled`.
-- **Pattern:** smoothed gains (about 10 ms) for input, wet and dry. **Tails on:** bypass mutes only the effect's input; dry goes to unity; the tail rings out. **Tails off:** wet fades, then the state is cleared once (in slices if it's big, not one huge memset in one block).
-- **Dry at unity in bypass, whatever the Mix knob says.** Fade the dry gain to 1 alongside the wet fade (`dry = 1 + wetGain × (mixDry − 1)`). The digital delay forgot this and went silent in bypass at full wet.
+- **Pattern (every plugin):** smoothed gains (about 10 ms) between the processed signal and the dry. **Effects with a tail** add the Tails option: smoothed input, wet and dry gains. **Tails on:** bypass mutes only the effect's input; dry goes to unity; the tail rings out. **Tails off:** wet fades, then the state is cleared once (in slices if it's big, not one huge memset in one block).
+- **With a Mix knob: dry at unity in bypass, whatever Mix says.** Fade the dry gain to 1 alongside the wet fade (`dry = 1 + wetGain × (mixDry − 1)`). The digital delay forgot this and went silent in bypass at full wet.
 - **Recreations: copy the original's bypass instead.** Some hardware just mutes the wet while the effect keeps running (the digital delay: a held loop carries on and is there again when you switch back on). Ask the owner; then a Tails switch may not belong at all.
 
 ## Versioning (the "tuna can" lesson)
 
-- **MOD caches plugin info and images, keyed by URI + version.** Re-uploading with the same version shows stale data. A face-less first install leaves the default "tuna can" thumbnail cached in the browser until 2035.
-- **Bump `lv2:microVersion` on every upload,** and keep `lv2:minorVersion` even and ≥ 2 (0 = pre-release, odd = unstable by LV2 convention).
+Two jobs, one number. On every path it's a **cache-buster**; on path B it's also a **release number**.
+
+- **MOD caches plugin info and images, keyed by URI + version.** Re-uploading with the same version shows stale data. A face-less first install leaves the default "tuna can" thumbnail cached in the browser until 2035. This bites hardest on path A, where the same `.mk` is uploaded again and again.
+- **Path A: bump `lv2:microVersion` on every upload, automatically.** The person never has to think about it; mention the new number when you hand over the file so they can check what's installed.
+- **Path B: real releases.** Bump micro for fixes, minor for new behaviour; tag releases, keep the CHANGELOG.
+- Keep `lv2:minorVersion` even and ≥ 2 (0 = pre-release, odd = unstable by LV2 convention).
 - **Keep DPF's `d_version()` in step:** major > 0 → minorVersion = minor + 2, microVersion = micro. `d_version(1,0,3)` ↔ minor 2, micro 3.
 - **Ship a face from the first upload.**
 - **Stale-cache check:** hard-refresh the MOD UI (Cmd/Ctrl+Shift+R), or open `http://192.168.51.1/effect/get?uri=<uri>&nocache=1`.

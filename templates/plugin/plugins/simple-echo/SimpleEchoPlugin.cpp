@@ -1,10 +1,14 @@
-// Simple Echo: the playbook's template plugin. Small on purpose, but it uses
-// every pattern the playbook asks for:
-//   - all memory allocated up front, sized for 96 kHz; run() never allocates
-//   - controls snapped on the first run(), smoothed after that
-//   - in-plugin bypass with Tails on/off (lv2:enabled port, last)
-//   - denormal guard in the feedback path
-//   - a soft knee on the output, so nothing hard-clips at the converter
+// Simple Echo: the playbook's template plugin. It's an echo, so it carries most
+// traits (docs/effect-profile.md). Each part is tagged with the trait it serves:
+//   [every]    every plugin: real-time run(), first-run snap, smoothing,
+//              in-plugin bypass with a ~10 ms crossfade (lv2:enabled port, last)
+//   [buffer]   stores audio: allocated up front, sized for 96 kHz
+//   [tail]     sound continues after the input stops: the Tails option
+//   [feedback] output fed back in: denormal guard, saturator in the loop,
+//              soft limit on the WET path so a runaway can't hit the converter
+//   [mix]      has a Mix knob: dry back to unity in bypass whatever Mix says
+// Delete the parts for traits your plugin doesn't have, with their ports and tests.
+// A gain or drive pedal gets no output limiter: its clipping is the sound.
 #include "DistrhoPlugin.hpp"
 
 #include <cmath>
@@ -13,13 +17,13 @@
 
 START_NAMESPACE_DISTRHO
 
-static const uint32_t kBufSize = 1u << 18;      // 2.7 s at 96 kHz
+static const uint32_t kBufSize = 1u << 18;      // [buffer] 2.7 s at 96 kHz
 static const uint32_t kBufMask = kBufSize - 1;
 
 static inline float clampf(float x, float lo, float hi) { return x < lo ? lo : (x > hi ? hi : x); }
 static inline float onePoleCoef(float hz, float sr) { return 1.0f - std::exp(-6.2831853f * hz / sr); }
 
-// rational tanh: smooth, flat beyond |x| = 3, no libm call per sample
+// [feedback] rational tanh: smooth, flat beyond |x| = 3, no libm call per sample
 static inline float softClip(float x)
 {
     if (x >  3.0f) return  1.0f;
@@ -28,7 +32,7 @@ static inline float softClip(float x)
     return x * (27.0f + x2) / (27.0f + 9.0f * x2);
 }
 
-// linear below k, approaches k + r smoothly, never above it
+// [feedback] linear below k, approaches k + r smoothly, never above it
 static inline float softKnee(float x, float k, float r)
 {
     const float a = std::fabs(x);
@@ -76,12 +80,12 @@ protected:
             p.name = "Mix"; p.symbol = "mix"; p.unit = "%";
             p.ranges.min = 0.0f; p.ranges.max = 100.0f; p.ranges.def = 35.0f;
             break;
-        case kTails:
+        case kTails:                                          // [tail]
             p.hints |= kParameterIsInteger | kParameterIsBoolean;
             p.name = "Tails"; p.symbol = "tails";
             p.ranges.min = 0.0f; p.ranges.max = 1.0f; p.ranges.def = 1.0f;
             break;
-        case kBypass:
+        case kBypass:                                         // [every]
             p.initDesignation(kParameterDesignationBypass);   // TTL: lv2_enabled, lv2:designation lv2:enabled
             break;
         }
@@ -110,11 +114,13 @@ protected:
         const float mix      = clampf(fParams[kMix] * 0.01f, 0.0f, 1.0f);
         const bool  bypass   = fParams[kBypass] > 0.5f;
         const bool  tails    = fParams[kTails] > 0.5f;
-        const float inT      = bypass ? 0.0f : 1.0f;
-        const float wetT     = (bypass && !tails) ? 0.0f : mix;
-        const float dryT     = bypass ? 1.0f : 1.0f - mix;
+        // [every] bypass fades over ~10 ms instead of switching hard (mod-host's own bypass
+        // jumps straight to dry on the next block, which clicks on a processed signal)
+        const float inT      = bypass ? 0.0f : 1.0f;              // [tail] mute only the input...
+        const float wetT     = (bypass && !tails) ? 0.0f : mix;   // [tail] ...so the tail rings out
+        const float dryT     = bypass ? 1.0f : 1.0f - mix;        // [mix] dry to unity in bypass
 
-        if (fFirst) {                    // controls arrive with the first run()
+        if (fFirst) {                    // [every] controls arrive with the first run()
             fFirst = false;
             fD = dTarget; fFb = fbTarget; fIn = inT; fWet = wetT; fDry = dryT;
         }
@@ -133,11 +139,12 @@ protected:
             const float b = fBuf[(fW - ip - 1) & kBufMask];
             const float y = a + t * (b - a);
 
-            fFbState += 0.3f * (y - fFbState);   // a little darkening per repeat
-            fBuf[fW] = softClip(fIn * in[i] + fFb * fFbState) + 1e-18f;   // denormal guard
+            fFbState += 0.3f * (y - fFbState);   // [feedback] a little darkening per repeat
+            fBuf[fW] = softClip(fIn * in[i] + fFb * fFbState) + 1e-18f;   // [feedback] saturator + denormal guard
             fW = (fW + 1) & kBufMask;
 
-            out[i] = softKnee(fDry * in[i] + fWet * y, 0.89f, 0.1f);
+            // [feedback] limit the wet only: the dry passes untouched, as it would through a pedal
+            out[i] = fDry * in[i] + softKnee(fWet * y, 0.8f, 0.15f);
         }
     }
 

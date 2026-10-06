@@ -9,7 +9,9 @@
 | Shipping path | A (single .mk) / B (GitHub repo) |
 | Agent can run commands? | yes / no (chat-only: list the checks not run) |
 | MOD units | Duo / Duo X / Dwarf |
-| Original or recreation | … (for recreations: the gear and the sources available) |
+| Starting point | imagined / reference sound / specific gear (`docs/effect-profile.md`) |
+| Traits | every + tail / feedback / buffer / nonlinear-gain / level-sensitive / modulated delay / stereo / Mix knob |
+| Source plugged in | guitar / bass / synth or line level |
 | Face | stock (style, colour, extra footswitches) / placeholder / own artwork |
 | Name, maker, URI | … / … / `urn:mod-cookbook:<name>` or `https://github.com/<owner>/<repo>` |
 
@@ -51,7 +53,9 @@ Measured relative cost (`tools/bench.py`), buffers allocated, what was done to k
 
 ## Test plan
 
-- [ ] Generic: timing at 44.1/48/96 kHz, levels, bypass (tails on/off), torture, no ticks, under 0 dBFS, silence
+- [ ] Every plugin: timing at 44.1/48/96 kHz, levels, click-free bypass at unity, torture, no ticks, silence
+- [ ] Per trait (`docs/effect-profile.md`): e.g. tails on/off, under 0 dBFS at max feedback, no aliasing at full gain
+- [ ] Template parts dropped, and why
 - [ ] One line per promise above
 - [ ] One line per hardware report
 

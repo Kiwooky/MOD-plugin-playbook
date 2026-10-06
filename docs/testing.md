@@ -20,14 +20,23 @@ Packages: `g++ g++-arm-linux-gnueabihf g++-aarch64-linux-gnu qemu-user lilv-util
 
 ## What every plugin should test
 
-Copy `templates/plugin/tests/test_simple_echo.py` and keep these:
+Copy `templates/plugin/tests/test_simple_echo.py`. Each test is tagged with its trait (`docs/effect-profile.md`); keep `[every]` and the ones for your effect's traits.
+
+Every plugin:
 
 - **Timing / tuning** at 44.1, 48 and 96 kHz (the first echo lands on the Time setting, a filter's corner is where it should be, …).
-- **Levels:** about unity where the spec says so.
-- **Bypass** with Tails on and off: dry at exactly unity, no step bigger than the signal's own.
-- **Torture:** every knob at its extreme, hot input, three sample rates: finite and bounded.
-- **No ticks** with musical input (`pluck_train` + `tick_count`), **outputs under 0 dBFS**.
+- **Levels:** as the spec says (unity, or "+12 dB at Level max" for a boost); at default settings, about as loud as bypass.
+- **Bypass:** dry at exactly unity, no step bigger than the signal's own.
+- **Torture:** every knob at its extreme, hot input, three sample rates: finite.
+- **No ticks** with musical input (`pluck_train` + `tick_count`).
 - **Silence in, silence out** (unless noise is a feature).
+
+By trait:
+
+- **Tail:** bypass with Tails on (the tail rings out) and off (the wet fades).
+- **Feedback loop:** torture at max feedback stays under 0 dBFS; the runaway grid.
+- **Nonlinear / gain:** no aliasing at full gain (a 3–5 kHz sine makes no tones below it); gain at Level max as specified.
+- **Level-sensitive:** at the source's real level.
 
 - **Reverbs:** RT60 (`rt60`) at all three rates (agreeing within a few tenths of a second), the decay knob monotonic over its range, pre-delay by onset (`onset_ms`), stereo outputs decorrelated (|corr| < 0.2), and the tail reaching silence.
 - **First run:** render with a non-default value from sample 0 (pre-delay, bypassed) and check there's no glide or fade-in. Controls arrive with the first `run()`.
@@ -36,7 +45,7 @@ Then **one test per promise in the spec** ("Wobble 10 is about 4× stock", "Repe
 
 ## Rules for writing tests
 
-- **Test at guitar level** (`pluck_train` peaks around −16 dBFS). The oil-can delay's Sag was tuned on hot test signals and barely reacted to a real guitar.
+- **Test at the source's level** (`pluck_train` peaks around −16 dBFS, like a guitar; scale it up for line-level sources). The oil-can delay's Sag was tuned on hot test signals and barely reacted to a real guitar.
 - **Smooth envelopes on test signals.** Abrupt starts and stops are clicks; the first tick hunt in the oil-can delay found the test signal's own edges.
 - **Validate a detector before trusting it:** clean input must read 0, planted faults must be found. `tick_count` measures the *treble share* (clicks are almost all treble; bright notes are not), and was checked against planted clicks down to −46 dBFS, white noise, and clean plucks.
 - **Test the knob's shape, not only its ends.** "Runs away at 10" passed while the real edge sat at 9.3, a sliver of the knob nobody could find. Test both sides of an edge at playable positions.

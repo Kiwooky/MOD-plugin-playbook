@@ -23,7 +23,7 @@ The incidents come from four plugins built while writing this playbook: a hall r
 - **Measure before you claim.** The oil-can delay's CPU was first predicted "well under the hall reverb"; it measured 1.25×, later 0.7× after removing the noise section, then 1.2× with oversampling. Only measurements went into the docs after that. (`dsp.md`)
 - **Players want movement, not dirt.** Modelled hiss and hum were switched off within seconds in the first hardware test; the warble they made in the tails was the part worth keeping. (`dsp.md`)
 - **Test at guitar level.** Sag was tuned for hot signals and barely reacted to a guitar at about −20 dBFS. (`testing.md`)
-- **Soft-knee the outputs.** 1.0.2's runaway peaked at +3.8 dBFS and hard-clipped at the converter: "digital ticks". (`dsp.md`)
+- **Soft-limit effects that can run away (wet path).** The oil-can delay 1.0.2's runaway peaked at +3.8 dBFS and hard-clipped at the converter: "digital ticks". (`dsp.md`)
 - **Oversample saturators inside feedback loops.** Short-time runaways re-sharpened and aliased their own edges every lap. (`dsp.md`)
 - **Map feedback edges on a grid, and make the edge playable.** A "one runaway path" fix moved the oil-can delay's runaway point to Repeat 9.3; on hardware it "would not oscillate any more". A Repeat × Reverb grid put the edge across several knob positions. (`dsp.md`, `testing.md`)
 - **Scale speed modulation by speed.** A fixed percentage of delay time wobbled long delays five times harder; stock warble went from 20 cents RMS (seasick) to a steady 4.5. (`dsp.md`)
@@ -65,6 +65,9 @@ The incidents come from four plugins built while writing this playbook: a hall r
 - **Read what's installed before theorising.** The hall reverb's tuna can survived a "v1.0.2 reinstall"; a duplicate-bundle theory and a reboot both went nowhere. `/effect/get` showed `version 0.0`, `stability: experimental`: an older file had been uploaded. Verified on a Duo. (`known-mod-issues.md`)
 
 ## Bypass, presets and identity
+
+- **Rules learned on one kind of effect get scoped, not copied.** The first versions said "Tails on/off" and "soft-knee every output" for every plugin, because they came from delays. A gain pedal has no tail, and a knee on its output squashes the boost it exists for. Rules now carry the trait they apply to. (`effect-profile.md`)
+- **mod-host's own bypass is an instant switch.** It copies input to output from the next block, with no crossfade; on a processed signal that pops. An `lv2:enabled` port lets the plugin fade. Source-checked (mod-host `effects.c`). (`lv2-and-mod-rules.md`)
 
 - **Bypass puts the dry at unity whatever Mix says.** The digital delay faded the wet out but kept Mix's dry gain, so at full wet, bypass went silent (found on a Duo). Fade the dry gain to 1 alongside the wet. Fixed and tested. (`lv2-and-mod-rules.md`)
 - **Ask what the original's bypass did before adding Tails.** On the digital delay's original the delay kept running under bypass and a held loop came back when the effect was switched on; the owner wanted that, not a Tails switch. (`lv2-and-mod-rules.md`)

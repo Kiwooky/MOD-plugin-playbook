@@ -26,14 +26,14 @@ The cookbook is right about the recipe's shape. These are the gaps it leaves, ea
 | --- | --- |
 | Pre-flight: ControlPort count = `kParameterCount` − 1 | **Equal** to `kParameterCount` |
 | Examples omit required features | Declare `opts:options` and `urid:map` (`docs/lv2-and-mod-rules.md`) |
-| No bypass port; MOD hard-bypasses | In-plugin bypass (`lv2:enabled`, last port), Tails on/off, dry at unity |
-| No output safety | Soft-knee the output; nothing past 0 dBFS |
+| No bypass port; MOD hard-bypasses (an instant switch that can click) | In-plugin bypass (`lv2:enabled`, last port) with a short crossfade, dry at unity. A Tails option only for effects with a tail |
+| No output safety | Feedback effects: a soft limit on the wet path. Gain and drive: none, the clipping is the sound (`docs/effect-profile.md`) |
 | `export` + `printf` for everything | Over ~100 KB, `export` fails; use `$(file)` (`docs/path-a-single-recipe.md`) |
-| No versioning | Bump the version on every upload, in code and TTL |
+| No versioning | Bump the build number on every upload, automatically: MOD caches a plugin's face and ports by version, so a re-upload with the same number shows the old one. Path B adds real releases |
 | No pedal face; say it's unsupported | Faces are supported; ship one from the first upload (`docs/modgui.md`) |
 | Generate, then hand over | Test before handing over; then ask what they heard |
 
-Without a shell you can't run the playbook's tools, so write the `.mk` by hand in the cookbook's shape with these overrides applied. Copy the patterns from the template plugin (`templates/plugin/plugins/simple-echo/SimpleEchoPlugin.cpp` and `templates/plugin/bundle/simple-echo.lv2/simple-echo.ttl`): it already does bypass, tails, smoothing, the soft knee and the required features.
+Without a shell you can't run the playbook's tools, so write the `.mk` by hand in the cookbook's shape with these overrides applied. Copy the patterns from the template plugin (`templates/plugin/plugins/simple-echo/SimpleEchoPlugin.cpp` and `templates/plugin/bundle/simple-echo.lv2/simple-echo.ttl`): each part is tagged with the trait it serves (`[every]`, `[tail]`, `[feedback]`, `[buffer]`, `[mix]`); keep what your effect needs (`docs/effect-profile.md`).
 
 ## 0. The kick-off
 
@@ -47,10 +47,18 @@ The person may be new to all of this. Lead with their idea, not with plumbing. (
 - **How it ships:** **path A**, a single `.mk` for the Online Builder (`docs/path-a-single-recipe.md`). No GitHub needed. Bring up **path B**, a GitHub repo (`docs/path-b-github-repo.md`), only if they mention GitHub, sharing source, collaborators or the MOD store, or once the plugin works on their unit. Moving later is a copy, not a rewrite.
 - **Build targets:** always all three (Duo, Duo X, Dwarf).
 
+**Work out where the idea starts** (`docs/effect-profile.md`). Usually it's clear from their first message; ask only if it isn't:
+
+- **Imagined**, with no prior art: get the feel in their words and what it's near; build it from known blocks.
+- **A reference sound** ("Eddie Van Halen's phaser"): research the gear and how it works, and confirm it with them before building.
+- **Specific gear**, often with schematics: ask for schematics, panel photos, the manual and recordings, and keep a sources table.
+
+Then tick the effect's **traits** (tail, feedback loop, buffer, nonlinear/gain, level-sensitive, modulated delay, stereo, Mix knob). They decide which rules, tests and template parts apply. For level-sensitive effects, ask what plugs in: guitar and bass are around −20 dBFS, synths and line sources much hotter.
+
 **Then propose the shape in one message** (the cookbook's style) and end with *"Confirm or adjust, then I'll build it."*:
 
 1. **Name and maker:** a name from their description. Offer their own name or alias as the maker, so their work carries their name.
-2. **Category, mono/stereo, the knobs:** each knob with range, default and unit. Bypass with Tails on by default.
+2. **Category, mono/stereo, the knobs:** each knob with range, default and unit. Bypass, plus a Tails option if the effect has a tail.
 3. **Which MOD they'll play it on.** The Duo (32-bit ARM Cortex-A7) has the tightest CPU budget; say if the design is heavy.
 4. **The face:** offer to dress the pedal so it doesn't arrive as MOD's default "tuna can". One question: *what should it look like?*
    - **Compact stompbox** with the big rocker footswitch (Boss-like): `japanese`, up to 8 knobs.
@@ -59,7 +67,7 @@ The person may be new to all of this. Lead with their idea, not with plumbing. (
    - **Their own artwork:** a custom face (`docs/modgui.md`), after the sound works.
 
    Plus a colour. You work out the size: the knob count picks the panel, and every extra footswitch they'd stomp (Tails, Hold, Tap) widens the box. Check what fits with `tools/stock_face.py <bundle> --style <s> --dry-run` before proposing. Without a shell the stock art can't be packed into the recipe: say it ships with MOD's default look for now, and that a face later is just a version bump.
-5. **For a recreation of real gear:** ask for schematics, manuals or recordings, and keep a sources table (documented vs guessed).
+5. **What you'll base it on:** for a reference sound, what your research found and the gear you'll model; for specific gear, what they can send. Keep a sources table (documented vs guessed).
 
 The URI follows from the name (`urn:mod-cookbook:<name>` on path A) and never changes once shared. The licence is GPL-3.0-or-later, inherited from the template; say so if they ask, and change it only if they bring their own code. Record the answers at the top of the spec (`templates/spec-template.md`); without files, keep the spec as a short block in the chat.
 
@@ -70,7 +78,7 @@ If the request is already specific ("a CE-2 chorus"), state your choices in two 
 1. **Spec first.** Write or update the spec (`templates/spec-template.md`): controls, ranges, defaults, and every mapping marked *guess* or *measured*.
 2. **Edit the sources** in `plugins/<name>/` and `bundle/<name>.lv2/`. The TTL is hand-written and must match the code (`docs/lv2-and-mod-rules.md`).
 3. **Run the gate:** `tools/check.sh --src plugins/<name> --bundle bundle/<name>.lv2 --test tests/test_<name>.py`. It builds native + Duo + Duo X/Dwarf through the builder's own hooks, compares the TTL with DPF's generator, load-checks, and runs the tests natively and on the Duo build under qemu. **Warnings fail the gate.**
-4. **Bump the version** on every upload (`docs/lv2-and-mod-rules.md`, Versioning).
+4. **Bump the build number** on every upload, without asking (`docs/lv2-and-mod-rules.md`, Versioning).
 5. **The human uploads** to builder.mod.audio and plays it on the device. Then use `templates/hardware-report.md`.
 6. **Every hardware report becomes a failing test first, then the fix** (`docs/hardware-feedback.md`).
 
@@ -85,15 +93,16 @@ If the request is already specific ("a CE-2 chorus"), state your choices in two 
 ## 3. Hard rules (each one cost a real bug, see `docs/lessons.md`)
 
 - **Measure before you claim.** CPU, levels, modulation depth, where feedback runs away: run the benchmark or the test, then state the number. Estimates are labelled as estimates.
-- **`run()` is real-time:** no allocation, locks, I/O, printf, or per-sample `pow/exp/sin/tanh`. Allocate in the constructor for 96 kHz.
+- **`run()` is real-time:** no allocation, locks, I/O, printf, or per-sample `pow/exp/sin/tanh`. Buffers are allocated in the constructor, sized for 96 kHz.
 - **Controls arrive with the first `run()`,** not before `activate()`. Snap smoothers on the first run.
 - **Declare `opts:options` and `urid:map` as required features** in the TTL.
-- **Put bypass in the plugin** (`lv2:enabled` port, last), with Tails on/off; never click.
-- **Soft-knee the outputs.** Anything past 0 dBFS hard-clips at the converter and sounds like digital ticks.
-- **Test at guitar level** (peaks around −20 dBFS), with smooth-enveloped test signals.
+- **Apply rules by trait, not by habit** (`docs/effect-profile.md`). Most rules here were learned on delays and reverbs; a fuzz doesn't need Tails or an output limiter.
+- **Put bypass in the plugin** (`lv2:enabled` port, last) with a ~10 ms crossfade, so switching never clicks. A Tails option only if the effect has a tail.
+- **Only the converter clips.** Audio between plugins is floating point, so going over 0 dBFS inside a chain is fine; past 0 dBFS at the last output it hard-clips as "digital ticks". Effects that can run away (feedback) get a soft limit on the wet path. Gain and drive pedals don't: a boost is meant to be loud, and the Level knob manages it.
+- **Test at the source's real level** (guitar peaks around −20 dBFS; synths and line sources are hotter), with smooth-enveloped test signals.
 - **Ports and the URI are frozen once shared.** Never reorder, rename or remove them afterwards.
 - **Buttons and footswitches use `mod-widget="switch"`.** Momentary-by-default only when the person asks. Run `tools/face_click_test.py` on every face change, and before blaming the device for a control that doesn't respond.
-- **Bypass leaves the dry at unity whatever Mix says.**
+- **If it has a Mix knob, bypass leaves the dry at unity whatever Mix says.**
 - **Ask about the human's ears.** Tests prove behaviour; only playing it proves it is musical. After each upload, ask what they heard.
 
 ## 4. Map of this repo
@@ -101,6 +110,7 @@ If the request is already specific ("a CE-2 chorus"), state your choices in two 
 | Path | What |
 | --- | --- |
 | `docs/process.md` | The stages from idea to release, for both paths |
+| `docs/effect-profile.md` | Where the idea starts (imagined, reference, specific gear) and the traits that decide rules, tests and template parts |
 | `docs/path-a-single-recipe.md` | Single `.mk` for the Online Builder |
 | `docs/path-b-github-repo.md` | GitHub repo + package `.mk` |
 | `docs/lv2-and-mod-rules.md` | TTL, ports, bypass, versioning, footswitches |

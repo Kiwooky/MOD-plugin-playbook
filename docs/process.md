@@ -5,7 +5,7 @@ The same stages for both paths. Each ends with something checkable. Skipping one
 | # | Stage | Done when |
 | --- | --- | --- |
 | 0 | **Kick-off** (`AGENTS.md` §0) | The idea, the proposed shape (name, maker, knobs, unit, face) confirmed and recorded in the spec |
-| 1 | **Concept** | One paragraph on what it is and why it sounds like itself. For recreations: how the original works, with sources |
+| 1 | **Concept** (`effect-profile.md`) | One paragraph on what it is and why it sounds like itself, researched to fit the starting point (imagined, reference sound, specific gear); the traits ticked |
 | 2 | **Spec** (`templates/spec-template.md`) | Controls with ranges and defaults; every mapping marked *guess* or *measured*; a sources table |
 | 3 | **Ports** | The port table is settled; it can still change until the first public share, then never again |
 | 4 | **DSP** (`dsp.md`) | Builds clean on three targets |

@@ -4,12 +4,12 @@ MOD units are small ARM computers. The Duo (Cortex-A7, 32-bit) is the tightest; 
 
 ## Real-time basics
 
-- **`run()` is real-time:** no allocation, I/O, locks or printf. Allocate everything in the constructor, sized for **96 kHz**, and clear it in `activate()`. Power-of-two buffers with a mask.
+- **`run()` is real-time:** no allocation, I/O, locks or printf. Allocate everything in the constructor and clear it in `activate()`. Audio buffers (delays, reverbs, choruses, loopers) are sized for **96 kHz**, power-of-two with a mask.
 - **Controls arrive with the first `run()`,** not before `activate()`. Snap every smoother to its target on the first run, then smooth.
 - **Smooth anything that moves a gain, a filter or a delay tap** (one-pole, about 10 ms for gains, longer for delay times, which glide like tape).
 - **Land smoothers on their target.** In float, `g += c * (target - g)` stalls once the step is below float resolution: the BBD echo's "dry at unity" measured 1 + 3e-5 with a 10 ms smoother. Snap to the target at the end of the block once within about 1e-4 (in tests).
 - **Scale every time constant and delay length by the sample rate.** Test at 44.1, 48 and 96 kHz.
-- **Denormals:** add a tiny constant (1e-18) in every feedback path.
+- **Denormals:** add a tiny constant (1e-18) in every feedback path, including recursive filters and envelope followers.
 
 ## CPU
 
@@ -18,7 +18,12 @@ MOD units are small ARM computers. The Duo (Cortex-A7, 32-bit) is the tightest; 
 - **Divisions cost** on the Duo (~14+ cycles). Hoist `1/x` to control rate where you can.
 - **Measure, don't guess.** `tools/bench.py` renders the same audio through several plugins and prints relative cost; run it on the Duo build under qemu for Duo-like ratios. Only the Duo's own CPU meter gives absolute load. The oil-can delay's first estimate was wrong in both directions.
 
-## Saturation and feedback loops
+## Saturation and drive
+
+- **Oversample nonlinearities that work hard.** A fuzz or high-gain drive makes harmonics far above the input; past half the sample rate they fold back as inharmonic "fizz". 2× (or more for fuzz) with a decent filter either side; a gentle clip at low gain may not need it. Test: a 3–5 kHz sine at full gain shouldn't produce tones below it.
+- **The clipping curve is the sound.** No limiter or knee after it. Set default Gain and Level so the effect at defaults is about as loud as bypass, and let the Level knob boost.
+
+## Feedback loops
 
 - **Oversample nonlinearities inside loops.** A saturator in a feedback loop re-sharpens its own edges every lap, and without oversampling the edges alias into audible "digital" ticks. Even cheap 2× (midpoint interpolation, nonlinearity at both points, 2-tap average) fixed it in the oil-can delay.
 - **Cap the loop bandwidth.** Short delays with high feedback put many laps per second through the saturator; a gentle roll-off in the feedback path (about 6 kHz) keeps runaway edges from building.
@@ -28,9 +33,12 @@ MOD units are small ARM computers. The Duo (Cortex-A7, 32-bit) is the tightest; 
 
 ## Outputs
 
-- **Soft-knee every output just under 0 dBFS, always.** Anything past 0 dBFS hard-clips at the converter. That was the "digital ticks" in the oil-can delay 1.0.2.
+- **Only the converter clips.** Audio between plugins is floating point, so a boost above 0 dBFS reaches the next plugin intact; only the unit's last output hard-clips. So:
+  - **Effects that can run away** (feedback loops, resonance, self-oscillation): a soft limit just under 0 dBFS on the **wet** path. The oil-can delay's runaway peaked at +3.8 dBFS and hard-clipped: "digital ticks" in 1.0.2.
+  - **Gain and drive:** no limit. Say in the README that a boost at the end of a chain needs the Level knob, or it will clip the converter.
+  - **Everything else:** no limit needed if the effect can't add level; test that it doesn't.
 - **Opposite-polarity outputs:** a classic stereo trick (dry + wet on one side, dry − wet on the other) is wide in stereo but cancels the wet if both outputs end up in one mono input. Say so in the README, and recommend one output for mono rigs.
-- **Level:** guitars into a MOD peak around −20 dBFS (the nominal input level isn't documented; this is from testing). Tune dynamics (compressors, sag, saturation thresholds) for that, not for a hot test signal.
+- **Level:** guitars into a MOD peak around −20 dBFS (the nominal input level isn't documented; this is from testing). Synths, keys and drum machines at line level are much hotter. Tune level-sensitive effects (drive, compressors, gates, envelope filters, sag) for the source the person will use, not for a hot test signal.
 
 ## Delays and modulation
 
