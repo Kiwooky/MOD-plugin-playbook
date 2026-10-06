@@ -39,7 +39,7 @@ Renaming the template: the folder names, `NAME` in the plugin Makefile, the clas
 
 ## Size budget
 
-A face adds roughly 200–300 KB (background JPEG, knob strip as a 256-colour PNG, screenshot, thumbnail). Full-colour PNGs are about 4× bigger. Taj Mahal's recipe with face was ~292 KB and built fine.
+A face adds roughly 200–300 KB (background JPEG, knob strip as a 256-colour PNG, screenshot, thumbnail). Full-colour PNGs are about 4× bigger. The hall reverb's recipe with face was ~292 KB and built fine.
 
 ## Moving to path B later
 

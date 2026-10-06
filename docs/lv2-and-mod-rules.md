@@ -29,8 +29,8 @@ If the plugin has an `lv2:designation lv2:enabled` port, mod-host does **not** h
 - **DPF:** `p.initDesignation(kParameterDesignationBypass)`, last in the enum. DPF inverts the value internally (1 = bypassed).
 - **TTL:** symbol `lv2_enabled`, name "Enabled", default 1, `lv2:integer , lv2:toggled`, `lv2:designation lv2:enabled`.
 - **Pattern:** smoothed gains (about 10 ms) for input, wet and dry. **Tails on:** bypass mutes only the effect's input; dry goes to unity; the tail rings out. **Tails off:** wet fades, then the state is cleared once (in slices if it's big, not one huge memset in one block).
-- **Dry at unity in bypass, whatever the Mix knob says.** Fade the dry gain to 1 alongside the wet fade (`dry = 1 + wetGain × (mixDry − 1)`). MultiPlay forgot this and went silent in bypass at full wet.
-- **Recreations: copy the original's bypass instead.** Some hardware just mutes the wet while the effect keeps running (MultiPlay: a held loop carries on and is there again when you switch back on). Ask the owner; then a Tails switch may not belong at all.
+- **Dry at unity in bypass, whatever the Mix knob says.** Fade the dry gain to 1 alongside the wet fade (`dry = 1 + wetGain × (mixDry − 1)`). The digital delay forgot this and went silent in bypass at full wet.
+- **Recreations: copy the original's bypass instead.** Some hardware just mutes the wet while the effect keeps running (the digital delay: a held loop carries on and is there again when you switch back on). Ask the owner; then a Tails switch may not belong at all.
 
 ## Versioning (the "tuna can" lesson)
 

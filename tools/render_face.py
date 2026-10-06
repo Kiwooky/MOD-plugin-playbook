@@ -10,6 +10,7 @@ plugin TTL (defaults, ranges). Knob frames are worked out the way mod-ui does:
 frames = strip width / element width, frame = round((v - min)/(max - min) * steps),
 on a log scale for ports marked pprops:logarithmic.
 mod-widget="switch" elements get class on/off; the bypass widget is drawn active.
+Faces that @import mod-ui's /fonts render with them when PB_FONTS_DIR points at a copy.
 Writes the screenshot at face size and a thumbnail that fits 256x64.
 """
 import os, re, sys, tempfile
@@ -45,6 +46,9 @@ def main():
     html = re.sub(r'\{\{#.*?\}\}.*?\{\{/.*?\}\}', '', html, flags=re.S)
     css = css.replace('{{{cns}}}', '').replace('{{{ns}}}', '')
     css = re.sub(r'url\(/resources/([^)]+)\)', lambda m: 'url(file://%s/%s)' % (os.path.abspath(res), m.group(1)), css)
+    fonts = os.environ.get('PB_FONTS_DIR')        # mod-ui's /fonts, for faces that @import them (tools/stock_face.py sets this)
+    if fonts:
+        css = re.sub(r'url\(/fonts/([^)]+)\)', lambda m: 'url(file://%s/%s)' % (os.path.abspath(fonts), m.group(1)), css)
     html = html.replace('{{{cns}}}', '').replace('{{{ns}}}', '')
     js = '''
 const ports = %s;
@@ -71,7 +75,12 @@ async function go() {
 }
 go();
 ''' % __import__('json').dumps(ports)
-    page = '<html><head><style>body{margin:0;background:transparent}%s</style></head><body>%s<script>%s</script></body></html>' % (css, html, js)
+    imports = ''.join(re.findall(r'@import[^;]+;', css))      # @import only works at the top of a stylesheet
+    if fonts:                                                    # and mod-ui's page-wide fonts
+        imports += ''.join('@import url(file://%s/%s/stylesheet.css);' % (os.path.abspath(fonts), d)
+                           for d in sorted(os.listdir(fonts)) if os.path.exists(os.path.join(fonts, d, 'stylesheet.css')))
+    css = re.sub(r'@import[^;]+;', '', css)
+    page = '<html><head><style>%sbody{margin:0;background:transparent;font-family:sans-serif}%s</style></head><body>%s<script>%s</script></body></html>' % (imports, css, html, js)
     from playwright.sync_api import sync_playwright
     with tempfile.NamedTemporaryFile('w', suffix='.html', delete=False) as f:
         f.write(page); tmp = f.name
@@ -80,6 +89,7 @@ go();
         pg = b.new_page(viewport={'width': 1400, 'height': 1000})
         pg.goto('file://' + tmp)
         pg.wait_for_function('document.title === "ready"', timeout=10000)
+        pg.evaluate('document.fonts.ready')
         el = pg.query_selector('.mod-pedal')
         el.screenshot(path=shot, omit_background=True)
         b.close()

@@ -1,35 +1,49 @@
 # Changelog
 
+## 0.4.0 — 2026-10-07
+
+One link to start: point any AI at `AGENTS.md` and it has everything it needs.
+
+- **Licence: GPL-3.0-or-later** (was MIT), template plugin included. The cookbook-derived parts keep MOD's MIT notice (`LICENSES/`).
+- `AGENTS.md` "Start here": reading the repo by raw URL when there's no clone; the MOD plugin cookbook's prompt and `gain.mk` as required reading; a table of where the playbook overrides the cookbook; pointers into the template plugin for agents that can't run the tools.
+- The setup interview is now a kick-off: the idea first; the agent's tools, the path (A by default) and the build targets worked out without asking; then the shape proposed in one message, cookbook style. Follows the cookbook's own finding that an up-front "which workflow?" question made it worse.
+- README "Start with one link"; `process.md` and the spec template follow the kick-off.
+- New `tools/stock_face.py`: the MOD SDK's stock pedals (japanese, boxy, british, lata) picked from the ports, a style and a colour. Knob count picks the panel; extra footswitches (`--stomp`) widen a boxy box; the first enumeration becomes a dropdown. Pre-renders the template, ships only the art it uses (256 colours), renders with MOD's fonts. The kick-off now offers a face ("what should it look like?").
+- `face_click_test.py` drives mod-ui's dropdown (`custom-select`); `render_face.py` loads `@import`ed fonts and mod-ui's page fonts (`PB_FONTS_DIR`).
+- Docs and tools no longer name specific plugins; incidents are described by type (a hall reverb, a BBD echo, an early digital delay, an oil-can delay).
+- Verified in tests: every stock style renders; a boxy selector and an extra footswitch pass the click test with mod-ui's code; the template's own face still passes. Not yet seen on a unit.
+- Not yet verified: a novice run from the link alone, in a chat without a shell.
+
 ## 0.3.1 — 2026-10-06
 
-Harvested from the Taj Mahal session (Alesis-preset hall reverb: cookbook prototype → its own repo). Only the plugin-related learnings; the session's MOD UI troubleshooting is already in `known-mod-issues.md`.
+Harvested from a hall reverb session (cookbook prototype → its own repo). Only the plugin-related learnings; the session's MOD UI troubleshooting is already in `known-mod-issues.md`.
 
 - `lv2test.py`: `rt60()` (Schroeder T30) and `onset_ms()` for reverb and pre-delay tests.
 - Docs: setting reverb loop gain from a target RT60 and scaling tank lengths from the reference rate; time knobs that read true through upstream delays; rounding versus truncation in lo-fi loops (`dsp.md`); reverb and first-run tests (`testing.md`); preset labels versus folder names, shipping the original's setting as a preset (`presets.md`); GitHub's generated licence (`path-b-github-repo.md`); reading `version`/`stability` from `/effect/get` (`known-mod-issues.md`). Six lessons with their incidents.
-- Verified: `rt60()` and `onset_ms()` reproduce Taj Mahal's suite (RT60 5.63 / 5.58 / 5.72 s, onset 81.9 ms).
+- Verified: `rt60()` and `onset_ms()` reproduce the hall reverb's suite (RT60 5.63 / 5.58 / 5.72 s, onset 81.9 ms).
 
 ## 0.3.0 — 2026-10-06
 
-Harvested from the EC-280 session (Dynacord EC 280 bucket-brigade echo: cookbook prototype → its own repo, built without this playbook).
+Harvested from a bucket-brigade (BBD) echo session (cookbook prototype → its own repo, built without this playbook).
 
 - `face_click_test.py`: follows mod-ui's script semantics (one persistent `event.data`; no `change` back for the script's own `set_port_value`; values clamped and unchanged sets skipped, as in `setPortValue`); presses from each control's default; touch taps for toggles; finds script-driven controls by the attribute naming their port and presses them with mouse, wobble and touch.
 - Docs: script-driven controls and radio banks with "hold to add", measuring a printed knob sweep, fitting positions to a mockup, aligning output jacks with printed legends, renaming labels but never symbols (`modgui.md`); landing smoothers, noise floors in loops, resistor mixing networks, noise as modulation (`dsp.md`); ARM vs x86 in clock-phase code, the rdflib `index` trap, reading what mod-ui hands a face (`testing.md`); `scp -O` on macOS (`presets.md`). Sixteen lessons with their incidents.
-- Verified: the new `face_click_test.py` passes EC-280 1.0.0, MultiPlay and the template; fails exactly the three switches that failed on a Duo when EC-280's 1.0.1 face is put back; fails three switches when the face script's switch handler is emptied.
-- Not yet verified on a unit: EC-280's script-driven switches (1.0.2 onward), the output jack alignment.
+- Verified: the new `face_click_test.py` passes the BBD echo 1.0.0, the digital delay and the template; fails exactly the three switches that failed on a Duo when the BBD echo's 1.0.1 face is put back; fails three switches when the face script's switch handler is emptied.
+- Not yet verified on a unit: the BBD echo's script-driven switches (1.0.2 onward), the output jack alignment.
 
 ## 0.2.0 — 2026-10-06
 
-Harvested from the MultiPlay 20/20 session (cookbook prototype → its own repo).
+Harvested from an early digital delay session (cookbook prototype → its own repo).
 
 - New tools: `face_click_test.py` (clicks every control with mod-ui's own widget code, with and without a 2 px wobble; runs the face script), `presets_from_device.py` (presets made on a unit → factory presets, read back and checked), `package_harness.mk` (builds a path-B package `.mk` against a local repo copy).
 - New doc: `presets.md`.
 - Lessons and topic docs: click zones for multi-position switches, `funcs.set_port_value`, swapping strip art with a class, the documentation button, dry at unity in bypass whatever Mix says, original-style bypass for recreations, clocked (BBD/early digital) delays, compander modelling, opposite-polarity outputs in mono, delay measurement by cross-correlation, the 100-file web upload limit, `git ls-remote` for the commit hash, URI changes orphaning presets, front panels over blurry schematics.
-- Verified: `face_click_test.py` passes MultiPlay's face and the template, and fails three controls when MultiPlay's film widgets come back; `presets_from_device.py` reproduces MultiPlay's ten factory presets exactly from the Duo's files and is re-runnable; `package_harness.mk` builds MultiPlay and the template natively and for arm64.
+- Verified: `face_click_test.py` passes the digital delay's face and the template, and fails three controls when the digital delay's film widgets come back; `presets_from_device.py` reproduces the digital delay's ten factory presets exactly from the Duo's files and is re-runnable; `package_harness.mk` builds the digital delay and the template natively and for arm64.
 - Not yet verified on a unit: the strip-swap face script, the documentation button.
 
 ## 0.1.0 — 2026-10-05
 
-First version, from the Taj Mahal handover and the Can-Abyss Delay build.
+First version, from a hall reverb handover and an oil-can delay build.
 
 - `AGENTS.md` with the setup interview (single `.mk` or GitHub repo), the loop, definition of done and hard rules; `CLAUDE.md` points to it.
 - Template plugin (`simple-echo`) that builds both ways; its 13 tests pass natively and on the Duo build under qemu.

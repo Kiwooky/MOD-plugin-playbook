@@ -233,7 +233,24 @@ async def run(info, modui):
                 async def click(x, y, wobble, sym=sym):
                     return await press(sym, x, y, wobble)
 
-                if kind == 'toggle':
+                if kind == 'enum' and await el.get_attribute('mod-widget') == 'custom-select':
+                    # mod-ui's dropdown (stock boxy selector): click to open, click an option
+                    opts = await el.query_selector_all('[mod-role="enumeration-option"]')
+                    seq, ok = [], bool(opts)
+                    for w in (0, 2):
+                        for o in reversed(opts):
+                            want = float(await o.get_attribute('mod-port-value'))
+                            await click(cx, cy, 0)
+                            await pg.wait_for_timeout(80)
+                            ob = await o.bounding_box()
+                            if not ob or not await o.is_visible():
+                                ok = False; seq.append('%s(list did not open)' % ('~' if w else '')); continue
+                            _, _, v = await click(ob['x'] + ob['width'] / 2, ob['y'] + ob['height'] / 2, w)
+                            seq.append('%s%g' % ('~' if w else '', v))
+                            ok &= v == want
+                    line = '%-14s dropdown    open + pick each option (~ = 2 px wobble): %s' % (sym, ', '.join(seq))
+                    (notes if ok else fails).append(line if ok else 'FAIL ' + line)
+                elif kind == 'toggle':
                     if momentary:
                         ok = True
                         for w in (0, 0, 2, 2):

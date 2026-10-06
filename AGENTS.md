@@ -1,20 +1,69 @@
 # AGENTS.md: building MOD plugins with this playbook
 
-You are helping someone build an audio plugin for MOD devices (Duo, Duo X, Dwarf). This file is your entry point. Read it fully before writing code, then read the docs it points to as you reach each stage.
+You are helping someone build an audio plugin for MOD devices (Duo, Duo X, Dwarf). This file is your entry point. Someone may have sent you nothing but its link: that is enough. Follow it from the top.
 
-## 0. Start with the setup interview
+## Start here
 
-Ask these before anything else, one at a time, and record the answers at the top of the plugin's spec (`templates/spec-template.md`). They decide the whole workflow.
+### Reading this repo
 
-1. **How do you want to ship it?**
-   - **A. A single `.mk` file for the MOD Online Builder** (recommended for most people). No GitHub needed. You get one file to upload at builder.mod.audio; it installs straight onto a connected MOD. → `docs/path-a-single-recipe.md`
-   - **B. A GitHub repository** with a package `.mk` that builds from a commit. Better for sharing source, collaborating, versioning and a later store release. → `docs/path-b-github-repo.md`
-   - Not sure? Start with A. The sources live in normal folders either way, so moving to B later is a copy, not a rewrite.
-2. **Can you (the agent) run commands?** With a shell (Claude Code, Codex CLI, Cursor, Gemini CLI, or a chat with a code sandbox), run `tools/check.sh` yourself. Without one (chat only), write the files and give the person the exact commands to run, and say clearly which checks were not run.
-3. **Which MOD unit(s)?** Duo = 32-bit ARM Cortex-A7, the tightest CPU budget. Duo X and Dwarf = 64-bit ARM. Always build all three.
-4. **What is it?** An original effect, or a recreation of specific gear? For recreations, ask for schematics, manuals or recordings, and keep a sources table (what is documented, what is a guess).
-5. **The face (pedal GUI):** none yet (`tools/placeholder_face.py` makes one from the TTL, so the first upload has a face), their own artwork, or the stock MOD look?
-6. **Name, brand and identity:** plugin name, maker name, and a URI that will never change once shared.
+Every path in this file is relative to the repo root.
+
+- **You have a shell:** clone `https://github.com/Kiwooky/MOD-plugin-playbook` and work inside it.
+- **You can only fetch URLs:** read any file at `https://raw.githubusercontent.com/Kiwooky/MOD-plugin-playbook/main/<path>`, e.g. `.../main/docs/dsp.md`. Fetch the raw URL, not the `github.com/.../blob/...` page.
+- **You can't fetch at all:** ask the person to paste the file you need, one at a time.
+
+### Required reading, before your first reply
+
+1. **The MOD plugin cookbook's prompt:** <https://raw.githubusercontent.com/mod-audio/mod-plugin-cookbook/main/prompts/plugin-from-idea.md>. MOD's own guide to the single-`.mk` recipe format and the Online Builder. This playbook builds on it; read it as the foundation.
+2. **Its worked example:** <https://raw.githubusercontent.com/mod-audio/mod-plugin-cookbook/main/examples/gain.mk>. For anything with a delay line or LFO, also `examples/ce2-chorus.mk` in the same repo.
+3. **The rest of this file.** Read the `docs/` it points to as you reach each stage, not all up front.
+
+### Where the playbook overrides the cookbook
+
+The cookbook is right about the recipe's shape. These are the gaps it leaves, each found on real hardware (`docs/lessons.md`). Where the two disagree, follow the playbook.
+
+| Cookbook | Playbook |
+| --- | --- |
+| Pre-flight: ControlPort count = `kParameterCount` − 1 | **Equal** to `kParameterCount` |
+| Examples omit required features | Declare `opts:options` and `urid:map` (`docs/lv2-and-mod-rules.md`) |
+| No bypass port; MOD hard-bypasses | In-plugin bypass (`lv2:enabled`, last port), Tails on/off, dry at unity |
+| No output safety | Soft-knee the output; nothing past 0 dBFS |
+| `export` + `printf` for everything | Over ~100 KB, `export` fails; use `$(file)` (`docs/path-a-single-recipe.md`) |
+| No versioning | Bump the version on every upload, in code and TTL |
+| No pedal face; say it's unsupported | Faces are supported; ship one from the first upload (`docs/modgui.md`) |
+| Generate, then hand over | Test before handing over; then ask what they heard |
+
+Without a shell you can't run the playbook's tools, so write the `.mk` by hand in the cookbook's shape with these overrides applied. Copy the patterns from the template plugin (`templates/plugin/plugins/simple-echo/SimpleEchoPlugin.cpp` and `templates/plugin/bundle/simple-echo.lv2/simple-echo.ttl`): it already does bypass, tails, smoothing, the soft knee and the required features.
+
+## 0. The kick-off
+
+The person may be new to all of this. Lead with their idea, not with plumbing. (MOD learned this with the cookbook: an extra "which workflow?" question up front made it worse for everyone. Don't ask what you can work out or default.)
+
+**Your first reply:** one line on what you'll do together (describe a sound → get a file to upload at builder.mod.audio → play it on the MOD), then ask what they'd like to build. If they've already described it, skip straight to the proposal.
+
+**Work these out yourself. Don't ask:**
+
+- **Can you run commands?** You know. With a shell (Claude Code, Codex CLI, Cursor, Gemini CLI, a chat with a code sandbox), clone the repo and run `tools/check.sh` yourself. Without one, write the files, give the exact commands, and say clearly which checks were not run.
+- **How it ships:** **path A**, a single `.mk` for the Online Builder (`docs/path-a-single-recipe.md`). No GitHub needed. Bring up **path B**, a GitHub repo (`docs/path-b-github-repo.md`), only if they mention GitHub, sharing source, collaborators or the MOD store, or once the plugin works on their unit. Moving later is a copy, not a rewrite.
+- **Build targets:** always all three (Duo, Duo X, Dwarf).
+
+**Then propose the shape in one message** (the cookbook's style) and end with *"Confirm or adjust, then I'll build it."*:
+
+1. **Name and maker:** a name from their description. Offer their own name or alias as the maker, so their work carries their name.
+2. **Category, mono/stereo, the knobs:** each knob with range, default and unit. Bypass with Tails on by default.
+3. **Which MOD they'll play it on.** The Duo (32-bit ARM Cortex-A7) has the tightest CPU budget; say if the design is heavy.
+4. **The face:** offer to dress the pedal so it doesn't arrive as MOD's default "tuna can". One question: *what should it look like?*
+   - **Compact stompbox** with the big rocker footswitch (Boss-like): `japanese`, up to 8 knobs.
+   - **Hammond-style box** (DIY builds, MXR-like): `boxy`, 1–8 knobs, a selector, or up to 12 sliders. It widens for more controls.
+   - **Metal British box:** `british`, up to 4 knobs. **Tin can:** `lata`, up to 8 knobs.
+   - **Their own artwork:** a custom face (`docs/modgui.md`), after the sound works.
+
+   Plus a colour. You work out the size: the knob count picks the panel, and every extra footswitch they'd stomp (Tails, Hold, Tap) widens the box. Check what fits with `tools/stock_face.py <bundle> --style <s> --dry-run` before proposing. Without a shell the stock art can't be packed into the recipe: say it ships with MOD's default look for now, and that a face later is just a version bump.
+5. **For a recreation of real gear:** ask for schematics, manuals or recordings, and keep a sources table (documented vs guessed).
+
+The URI follows from the name (`urn:mod-cookbook:<name>` on path A) and never changes once shared. The licence is GPL-3.0-or-later, inherited from the template; say so if they ask, and change it only if they bring their own code. Record the answers at the top of the spec (`templates/spec-template.md`); without files, keep the spec as a short block in the chat.
+
+If the request is already specific ("a CE-2 chorus"), state your choices in two lines and build. Keep questions to the ones that change the plugin.
 
 ## 1. The loop for every change
 
@@ -29,7 +78,7 @@ Ask these before anything else, one at a time, and record the answers at the top
 
 - `tools/check.sh` passes: all three builds, no warnings, TTL matches DPF, tests pass natively and under qemu.
 - The version is bumped in both the code and the TTL.
-- The face ships, even as a placeholder (a face-less first install gets a cached "tuna can" thumbnail).
+- The face ships, stock or placeholder at least (a face-less first install gets a cached "tuna can" thumbnail).
 - CHANGELOG, README and spec say what changed and why, with measured numbers where you have them.
 - Anything not verified is said plainly ("not tested on hardware", "CPU estimate only").
 
@@ -64,4 +113,4 @@ Ask these before anything else, one at a time, and record the answers at the top
 | `docs/presets.md` | Factory presets, and carrying over presets made on a unit |
 | `templates/plugin/` | A complete, tested template plugin (both paths) |
 | `templates/spec-template.md`, `templates/hardware-report.md` | Fill-in templates |
-| `tools/` | check.sh, assemble_recipe.py, harness.mk, package_harness.mk, lv2host.c, lv2test.py, ttlcmp.py, bench.py, placeholder_face.py, render_face.py, face_click_test.py, presets_from_device.py, knob_filmstrip.py, vendor_dpf.sh |
+| `tools/` | check.sh, assemble_recipe.py, harness.mk, package_harness.mk, lv2host.c, lv2test.py, ttlcmp.py, bench.py, placeholder_face.py, stock_face.py, render_face.py, face_click_test.py, presets_from_device.py, knob_filmstrip.py, vendor_dpf.sh |

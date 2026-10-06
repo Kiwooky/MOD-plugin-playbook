@@ -55,7 +55,7 @@ protected:
     const char* getLabel()       const override { return "SimpleEcho"; }
     const char* getDescription() const override { return "Template echo for the MOD plugin playbook."; }
     const char* getMaker()       const override { return DISTRHO_PLUGIN_BRAND; }
-    const char* getLicense()     const override { return "MIT"; }
+    const char* getLicense()     const override { return "GPL-3.0-or-later"; }
     uint32_t    getVersion()     const override { return d_version(1, 0, 0); }   // = lv2:minorVersion 2, microVersion 0
     int64_t     getUniqueId()    const override { return d_cconst('s', 'E', 'c', 'o'); }
 

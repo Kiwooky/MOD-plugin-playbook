@@ -1,6 +1,6 @@
 # Runs a cookbook recipe's Buildroot hooks locally, without Buildroot.
 #
-#   make -f harness.mk RECIPE=taj-mahal.mk PREFIX=TAJ_MAHAL SRC=$PWD/dpf-copy OUT=$PWD/out [CROSS=arm32|arm64]
+#   make -f harness.mk RECIPE=simple-echo.mk PREFIX=SIMPLE_ECHO SRC=$PWD/dpf-copy OUT=$PWD/out [CROSS=arm32|arm64]
 #
 # SRC  : a fresh copy of DPF checked out at the recipe's _VERSION SHA
 #        (git clone https://github.com/DISTRHO/DPF.git && git checkout <sha> && git submodule update --init)

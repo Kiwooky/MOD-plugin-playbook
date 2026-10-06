@@ -1,6 +1,6 @@
 # Harvesting lessons from other sessions
 
-This playbook started from Taj Mahal's handover and the Can-Abyss build. MultiPlay 20/20 was harvested in 0.2.0, EC-280 in 0.3.0. Other plugin sessions (yours) will have learned things that belong here.
+This playbook started from a hall reverb's handover and an oil-can delay build. An early digital delay was harvested in 0.2.0, a bucket-brigade echo in 0.3.0. Other plugin sessions (yours) will have learned things that belong here.
 
 ## What to look for
 

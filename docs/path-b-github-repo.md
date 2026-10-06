@@ -14,13 +14,13 @@ dpf/                             vendored DPF, DSP-only (tools/vendor_dpf.sh)
 docs/spec.md, CHANGELOG.md, README.md, LICENSE, ARTWORK-LICENSE.md
 ```
 
-A repo created with GitHub's "Add a license" option starts with that licence in its initial commit (Taj Mahal's came with GPL-2 while the code was MIT). Check `LICENSE` matches what the person intends before the first push, and say if you replace it.
+A repo created with GitHub's "Add a license" option starts with that licence in its initial commit (the hall reverb's came with GPL-2 while the code was MIT). Check `LICENSE` matches what the person intends before the first push, and say if you replace it. A plugin built from the template is GPL-3.0-or-later: pick GPL-3.0 in GitHub's menu, or copy the playbook's `LICENSE`.
 
 `templates/plugin/` has all of this except `dpf/` and the docs. **Vendor DPF** (about 2.7 MB) with `tools/vendor_dpf.sh`: the builder fetches a GitHub tarball, which doesn't include submodules. Keep `dpf/utils/symbols`: the link step needs it.
 
 ## Identity
 
-The URI is your repo URL (`https://github.com/<owner>/<repo>`), set in `DISTRHO_PLUGIN_URI`, `manifest.ttl`, `<name>.ttl` and `modgui.ttl`. Prefix your bundle and package name with your brand (`nhe-can-abyss`) to avoid clashes with other people's plugins.
+The URI is your repo URL (`https://github.com/<owner>/<repo>`), set in `DISTRHO_PLUGIN_URI`, `manifest.ttl`, `<name>.ttl` and `modgui.ttl`. Prefix your bundle and package name with your brand (`mybrand-echo`) to avoid clashes with other people's plugins.
 
 ## Shipping a build
 
@@ -28,7 +28,7 @@ The URI is your repo URL (`https://github.com/<owner>/<repo>`), set in `DISTRHO_
 2. Commit and push. **The GitHub web uploader takes 100 files at a time** and a repo with vendored DPF has about 200, so use GitHub Desktop (clone, copy the files in, commit, push) or `git`. Hidden files (`.gitignore`) don't come along when you drag a folder in Finder; press Cmd+Shift+. to see them.
 3. Get the **full 40-character commit hash**: on GitHub, open *Commits* and use the copy button next to the short hash (the short hash alone won't work), or run `git rev-parse HEAD`. An agent without access to the account can look it up with `git ls-remote https://github.com/<owner>/<repo>` (public repos).
 4. Paste it into the package `.mk` as `<P>_VERSION`. You don't need to commit this edit before uploading: the builder reads the `.mk` you upload, then fetches the code at that hash.
-5. Upload the package `.mk` at builder.mod.audio and install. The filename must match the prefix (`nhe-can-abyss.mk` ↔ `NHE_CAN_ABYSS_`).
+5. Upload the package `.mk` at builder.mod.audio and install. The filename must match the prefix (`mybrand-echo.mk` ↔ `MYBRAND_ECHO_`).
 
 ## Continuous checks
 

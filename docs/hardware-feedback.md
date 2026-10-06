@@ -15,7 +15,7 @@ If the report doesn't say which version or settings, **ask before changing anyth
 ## Turn it into a test that fails first
 
 1. **Reproduce offline** at their settings, with musical input at their level.
-2. **Find the cause, not just the symptom.** Can-Abyss "digital ticks" were two separate causes: the output going over 0 dBFS (converter clipping), and saturator edges aliasing in short-time runaways. One fix would have left half the problem.
+2. **Find the cause, not just the symptom.** The oil-can delay's "digital ticks" were two separate causes: the output going over 0 dBFS (converter clipping), and saturator edges aliasing in short-time runaways. One fix would have left half the problem.
 3. **Write the failing test,** then fix until it passes, then run the whole gate.
 4. **Check the test can fail:** a test that passes on the broken build proves nothing.
 
@@ -23,7 +23,7 @@ If the report doesn't say which version or settings, **ask before changing anyth
 
 "Make it oscillate easier", "more extreme", "duller": discuss the options with numbers, recommend one, then build. Map the behaviour (a grid, a sweep) before and after, so the change lands where the human expects.
 
-## Feedback from the Can-Abyss test cycle (examples)
+## Feedback from an oil-can delay test cycle (examples)
 
 | Report | Real cause | Fix |
 | --- | --- | --- |

@@ -2,7 +2,7 @@
 
 <date> · <author>
 
-## Setup (from the interview in AGENTS.md)
+## Setup (from the kick-off in AGENTS.md)
 
 | Question | Answer |
 | --- | --- |
@@ -10,7 +10,7 @@
 | Agent can run commands? | yes / no (chat-only: list the checks not run) |
 | MOD units | Duo / Duo X / Dwarf |
 | Original or recreation | … (for recreations: the gear and the sources available) |
-| Face | none yet (placeholder) / own artwork / stock |
+| Face | stock (style, colour, extra footswitches) / placeholder / own artwork |
 | Name, maker, URI | … / … / `urn:mod-cookbook:<name>` or `https://github.com/<owner>/<repo>` |
 
 ## Concept

@@ -7,7 +7,7 @@ Ships a face from the first upload (a face-less first install leaves a cached
 default thumbnail; see docs/lv2-and-mod-rules.md). Writes modgui.ttl and
 modgui/ (background, knob strip, switch strip, footswitch, HTML, CSS), adds
 modgui.ttl to manifest.ttl, then renders the screenshot and thumbnail with
-tools/render_face.py. All art is drawn here (MIT); replace it with real
+tools/render_face.py. All art is drawn here (no third-party assets); replace it with real
 artwork later. Knobs for numeric ports, switches for toggles/enumerations,
 a footswitch for the bypass port. Needs: pillow rdflib (+ playwright).
 """

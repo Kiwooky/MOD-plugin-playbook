@@ -139,7 +139,7 @@ def rt60(w, sr):
 
     w: (frames,) or (frames, channels); channels are summed in energy. Needs at least
     35 dB of clean decay in the render (render long enough, test with Vintage/noise off).
-    Taj Mahal: 5.63 / 5.58 / 5.72 s at 44.1 / 48 / 96 kHz for one setting.
+    Reference (a hall reverb): 5.63 / 5.58 / 5.72 s at 44.1 / 48 / 96 kHz for one setting.
     """
     e = np.asarray(w, dtype=float) ** 2
     if e.ndim > 1:
