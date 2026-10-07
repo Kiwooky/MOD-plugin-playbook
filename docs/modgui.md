@@ -81,7 +81,7 @@ What it writes: `modgui.ttl` (with `modgui:model/panel/color/knob` and the port 
 - **A stock face is a starting point.** Swap in your own background, keep the SDK's control positions, or replace the lot with real artwork (below). The ports don't change, so neither do saved pedalboards.
 - Checked in tests: all four styles, a selector and an extra footswitch render and pass the click test (mod-sdk `ba1e9be8`). Not yet seen on a unit.
 
-### Stock faces without a shell (experimental)
+### Stock faces without a shell
 
 A chat with no shell can't pack the SDK's art into a recipe, but the recipe can download it while it builds. `tools/stock_face.py --fetch-at-build` does this with a shell (it writes `modgui.ttl`, the screenshot, the thumbnail and `modgui/FETCH.txt`; `tools/assemble_recipe.py` turns the list into `wget` steps). Without a shell, write the same by hand:
 
@@ -101,7 +101,7 @@ Panels, colours and knobs: the "Holds" column above, or `--list`. Knob panels on
 
 **Screenshot and thumbnail without a shell:** download the pedal art a second time as `screenshot-<name>.png` and `thumbnail-<name>.png`. It shows the empty pedal in the plugin list; a shell can render the real one later (a version bump).
 
-**Status:** works in the local harness (the files land in the bundle; mod-ui's source renders SDK templates this way). **Not yet confirmed: whether builder.mod.audio allows downloads during a build,** or how a large thumbnail looks in the plugin list. Test recipe: `tests/face-fetch-test.mk`. If it fails with "face: could not download", the builder is offline: drop the face, and don't offer this again.
+**Status: verified on builder.mod.audio and a Duo (2026-10-07).** `tests/face-fetch-test.mk` built on the Online Builder, downloading the template, CSS and art during the build, and the white japanese face rendered on the pedalboard with its three knobs, labels, LED and brand. Its rendered thumbnail looked right in the plugin list. Not yet seen: the pedal art standing in as screenshot and thumbnail (the test shipped rendered ones). If a build ever fails with "face: could not download", GitHub or the builder's network was down: retry once, then ship without the face.
 
 ## Placeholder faces
 

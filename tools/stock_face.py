@@ -177,7 +177,7 @@ def main():
     ap.add_argument('--no-quantize', action='store_true')
     ap.add_argument('--dry-run', action='store_true', help='print the choice, write nothing')
     ap.add_argument('--fetch-at-build', action='store_true',
-                    help='ship only modgui.ttl, screenshot and thumbnail; the recipe downloads the SDK template, CSS and art at build time (EXPERIMENTAL)')
+                    help='ship only modgui.ttl, screenshot and thumbnail; the recipe downloads the SDK template, CSS and art at build time (verified on builder.mod.audio)')
     a = ap.parse_args()
     W = wizard()
     if a.list:

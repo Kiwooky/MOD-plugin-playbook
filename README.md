@@ -44,9 +44,6 @@ cd templates/plugin
 
 Then point your agent at `AGENTS.md` and describe the plugin you want. (That's the developer route; most people only need the one link above.)
 
-## Help wanted: one test upload
-
-`tests/face-fetch-test.mk` checks whether the Online Builder lets a recipe download files while it builds. If it does, AIs without a shell can give plugins a proper pedal face too. Upload it like any recipe and report what happened (build error, or a white stompbox face on the pedalboard) in an issue.
 
 ## What the human still does
 

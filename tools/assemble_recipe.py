@@ -18,9 +18,9 @@ How things are embedded (patterns proven on builder.mod.audio):
     because Linux refuses environment variables over 128 KB
   - binary files: base64 inside a define, decoded with base64 -d at install
   - a literal $ is escaped to $$ automatically
-  - EXPERIMENTAL: if modgui/FETCH.txt exists (tools/stock_face.py --fetch-at-build), the
-    files it lists are downloaded with wget at install time instead of being embedded,
-    so a stock face costs a few lines. Needs network on the builder; not yet confirmed.
+  - if modgui/FETCH.txt exists (tools/stock_face.py --fetch-at-build), the files it
+    lists are downloaded with wget at install time instead of being embedded, so a
+    stock face costs a few lines (verified on builder.mod.audio, 2026-10-07)
 """
 import argparse, base64, os, re, sys
 
