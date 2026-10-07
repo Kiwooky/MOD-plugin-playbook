@@ -16,6 +16,8 @@ It reads the cookbook and the playbook, asks what you'd like to build, proposes 
 
 An AI that can run commands also builds and tests the plugin before you upload it. In a plain chat it writes the file and tells you which checks it couldn't run.
 
+**If your AI can't open the link** (some free chat plans can't read GitHub files): open [`ALL-IN-ONE.md`](ALL-IN-ONE.md), click the download button (↓), attach the file to your chat and describe your plugin. It's the whole guide in one file.
+
 ## What you get
 
 - **A one-link start** (`AGENTS.md`): the agent reads the cookbook as required reading, asks about your idea, and proposes the plugin's shape for you to confirm. It ships as:
@@ -41,6 +43,10 @@ cd templates/plugin
 ```
 
 Then point your agent at `AGENTS.md` and describe the plugin you want. (That's the developer route; most people only need the one link above.)
+
+## Help wanted: one test upload
+
+`tests/face-fetch-test.mk` checks whether the Online Builder lets a recipe download files while it builds. If it does, AIs without a shell can give plugins a proper pedal face too. Upload it like any recipe and report what happened (build error, or a white stompbox face on the pedalboard) in an issue.
 
 ## What the human still does
 

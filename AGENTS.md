@@ -8,14 +8,33 @@ You are helping someone build an audio plugin for MOD devices (Duo, Duo X, Dwarf
 
 Every path in this file is relative to the repo root.
 
-- **You have a shell:** clone `https://github.com/Kiwooky/MOD-plugin-playbook` and work inside it.
-- **You can only fetch URLs:** read any file at `https://raw.githubusercontent.com/Kiwooky/MOD-plugin-playbook/main/<path>`, e.g. `.../main/docs/dsp.md`. Fetch the raw URL, not the `github.com/.../blob/...` page.
-- **You can't fetch at all:** ask the person to paste the file you need, one at a time.
+- **You have a shell:** `git clone https://github.com/Kiwooky/MOD-plugin-playbook` and work inside it. If the clone is blocked, carry on as below.
+- **You can fetch web pages:** use the links in the table below, **exactly as written** (`github.com/.../blob/main/...` pages). GitHub blocks automated fetches of folder (`/tree/`) and `/raw/` URLs, and some chat apps refuse `raw.githubusercontent.com` or any URL you build yourself. Don't construct URLs and don't search for the files.
+- **A fetch fails, or you can't fetch at all:** retry once, then stop and ask the person to attach one file: [**`ALL-IN-ONE.md`**](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/ALL-IN-ONE.md). It holds this guide, the cookbook's recipe instructions with its worked example, the key docs and the template plugin. They open that link, click the download button (↓, "Download raw file"), and attach it to the chat. Don't spend minutes working around a blocked fetch.
+
+| File | What |
+| --- | --- |
+| [`docs/effect-profile.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/effect-profile.md) | Where the idea starts; traits → rules, tests, template parts |
+| [`docs/path-a-single-recipe.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/path-a-single-recipe.md) | Single `.mk` for the Online Builder |
+| [`docs/lv2-and-mod-rules.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/lv2-and-mod-rules.md) | TTL, ports, bypass, versioning, footswitches |
+| [`docs/dsp.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/dsp.md) | DSP patterns for MOD's CPUs |
+| [`docs/hardware-feedback.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/hardware-feedback.md) | Turning "it sounds wrong" into a fix |
+| [`docs/modgui.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/modgui.md) | Pedal faces |
+| [`docs/testing.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/testing.md) | The test rig |
+| [`docs/process.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/process.md) | Stages from idea to release |
+| [`docs/path-b-github-repo.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/path-b-github-repo.md) | GitHub repo + package `.mk` |
+| [`docs/lessons.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/lessons.md) | Every rule with its incident |
+| [`docs/known-mod-issues.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/known-mod-issues.md) | MOD-side bugs that look like plugin bugs |
+| [`docs/presets.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/presets.md) | Factory presets |
+| [`templates/plugin/plugins/simple-echo/SimpleEchoPlugin.cpp`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/templates/plugin/plugins/simple-echo/SimpleEchoPlugin.cpp) | Template plugin source (tagged by trait) |
+| [`templates/plugin/plugins/simple-echo/DistrhoPluginInfo.h`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/templates/plugin/plugins/simple-echo/DistrhoPluginInfo.h) | Template header |
+| [`templates/plugin/bundle/simple-echo.lv2/simple-echo.ttl`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/templates/plugin/bundle/simple-echo.lv2/simple-echo.ttl) | Template TTL |
+| [`templates/spec-template.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/templates/spec-template.md) | Spec template |
 
 ### Required reading, before your first reply
 
-1. **The MOD plugin cookbook's prompt:** <https://raw.githubusercontent.com/mod-audio/mod-plugin-cookbook/main/prompts/plugin-from-idea.md>. MOD's own guide to the single-`.mk` recipe format and the Online Builder. This playbook builds on it; read it as the foundation.
-2. **Its worked example:** <https://raw.githubusercontent.com/mod-audio/mod-plugin-cookbook/main/examples/gain.mk>. For anything with a delay line or LFO, also `examples/ce2-chorus.mk` in the same repo.
+1. **The MOD plugin cookbook's prompt:** <https://github.com/mod-audio/mod-plugin-cookbook/blob/main/prompts/plugin-from-idea.md>. MOD's own guide to the single-`.mk` recipe format and the Online Builder. This playbook builds on it; read it as the foundation.
+2. **Its worked example** (also printed inside the prompt): <https://github.com/mod-audio/mod-plugin-cookbook/blob/main/examples/gain.mk>. For anything with a delay line or LFO, also <https://github.com/mod-audio/mod-plugin-cookbook/blob/main/examples/ce2-chorus.mk>.
 3. **The rest of this file.** Read the `docs/` it points to as you reach each stage, not all up front.
 
 ### Where the playbook overrides the cookbook
@@ -34,6 +53,8 @@ The cookbook is right about the recipe's shape. These are the gaps it leaves, ea
 | Generate, then hand over | Test before handing over; then ask what they heard |
 
 Without a shell you can't run the playbook's tools, so write the `.mk` by hand in the cookbook's shape with these overrides applied. Copy the patterns from the template plugin (`templates/plugin/plugins/simple-echo/SimpleEchoPlugin.cpp` and `templates/plugin/bundle/simple-echo.lv2/simple-echo.ttl`): each part is tagged with the trait it serves (`[every]`, `[tail]`, `[feedback]`, `[buffer]`, `[mix]`); keep what your effect needs (`docs/effect-profile.md`).
+
+**A build against a stand-in only proves the code parses.** Without DPF itself (a sandbox that can't clone it), you can't know it compiles on the builder: don't write your own DPF stand-in and call it a build. Say plainly that the first upload is the compile test, and that a build 2 may be needed. The TTL version numbers follow `docs/lv2-and-mod-rules.md` (Versioning); don't guess them.
 
 ## 0. The kick-off
 
@@ -57,7 +78,7 @@ Then tick the effect's **traits** (tail, feedback loop, buffer, nonlinear/gain, 
 
 **Then propose the shape in one message** (the cookbook's style) and end with *"Confirm or adjust, then I'll build it."*:
 
-1. **Name and maker:** a name from their description. Offer their own name or alias as the maker, so their work carries their name.
+1. **Name and maker:** a name from their description, and ask for their name or alias as the maker so their work carries it. Settle both before you build: the default "MOD Cookbook" only if they say so or don't answer.
 2. **Category, mono/stereo, the knobs:** each knob with range, default and unit. Bypass, plus a Tails option if the effect has a tail.
 3. **Which MOD they'll play it on.** The Duo (32-bit ARM Cortex-A7) has the tightest CPU budget; say if the design is heavy.
 4. **The face:** offer to dress the pedal so it doesn't arrive as MOD's default "tuna can". One question: *what should it look like?*
@@ -66,7 +87,7 @@ Then tick the effect's **traits** (tail, feedback loop, buffer, nonlinear/gain, 
    - **Metal British box:** `british`, up to 4 knobs. **Tin can:** `lata`, up to 8 knobs.
    - **Their own artwork:** a custom face (`docs/modgui.md`), after the sound works.
 
-   Plus a colour. You work out the size: the knob count picks the panel, and every extra footswitch they'd stomp (Tails, Hold, Tap) widens the box. Check what fits with `tools/stock_face.py <bundle> --style <s> --dry-run` before proposing. Without a shell the stock art can't be packed into the recipe: say it ships with MOD's default look for now, and that a face later is just a version bump.
+   Plus a colour. You work out the size: the knob count picks the panel, and every extra footswitch they'd stomp (Tails, Hold, Tap) widens the box. Check what fits with `tools/stock_face.py <bundle> --style <s> --dry-run` before proposing. Without a shell, a stock face is **experimental**: the recipe can download MOD's template and art while it builds (`docs/modgui.md`, Stock faces without a shell), but that's not yet confirmed on the builder. Offer it as "want to try it?", not as a promise; if the build fails with "face: could not download", ship the next build without the face.
 5. **What you'll base it on:** for a reference sound, what your research found and the gear you'll model; for specific gear, what they can send. Keep a sources table (documented vs guessed).
 
 The URI follows from the name (`urn:mod-cookbook:<name>` on path A) and never changes once shared. The licence is GPL-3.0-or-later, inherited from the template; say so if they ask, and change it only if they bring their own code. Record the answers at the top of the spec (`templates/spec-template.md`); without files, keep the spec as a short block in the chat.
@@ -88,7 +109,8 @@ If the request is already specific ("a CE-2 chorus"), state your choices in two 
 - The version is bumped in both the code and the TTL.
 - The face ships, stock or placeholder at least (a face-less first install gets a cached "tuna can" thumbnail).
 - CHANGELOG, README and spec say what changed and why, with measured numbers where you have them.
-- Anything not verified is said plainly ("not tested on hardware", "CPU estimate only").
+- Anything not verified is said plainly ("not tested on hardware", "CPU estimate only", "compiled against a stand-in, not DPF").
+- Loudness at the default settings is measured against bypass (average level, not peaks) and within ±3 dB, unless the spec says otherwise.
 
 ## 3. Hard rules (each one cost a real bug, see `docs/lessons.md`)
 
@@ -123,4 +145,5 @@ If the request is already specific ("a CE-2 chorus"), state your choices in two 
 | `docs/presets.md` | Factory presets, and carrying over presets made on a unit |
 | `templates/plugin/` | A complete, tested template plugin (both paths) |
 | `templates/spec-template.md`, `templates/hardware-report.md` | Fill-in templates |
-| `tools/` | check.sh, assemble_recipe.py, harness.mk, package_harness.mk, lv2host.c, lv2test.py, ttlcmp.py, bench.py, placeholder_face.py, stock_face.py, render_face.py, face_click_test.py, presets_from_device.py, knob_filmstrip.py, vendor_dpf.sh |
+| `ALL-IN-ONE.md` | Generated (`tools/make_all_in_one.py`): this file, the cookbook prompt, the key docs and the template, for chats that can't fetch. Re-run it after changing any of them |
+| `tools/` | make_all_in_one.py, check.sh, assemble_recipe.py, harness.mk, package_harness.mk, lv2host.c, lv2test.py, ttlcmp.py, bench.py, placeholder_face.py, stock_face.py, render_face.py, face_click_test.py, presets_from_device.py, knob_filmstrip.py, vendor_dpf.sh |

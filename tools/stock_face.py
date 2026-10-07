@@ -176,6 +176,8 @@ def main():
     ap.add_argument('--stomp', action='append', default=[], help='toggle port symbol to put on its own footswitch (boxy)')
     ap.add_argument('--no-quantize', action='store_true')
     ap.add_argument('--dry-run', action='store_true', help='print the choice, write nothing')
+    ap.add_argument('--fetch-at-build', action='store_true',
+                    help='ship only modgui.ttl, screenshot and thumbnail; the recipe downloads the SDK template, CSS and art at build time (EXPERIMENTAL)')
     a = ap.parse_args()
     W = wizard()
     if a.list:
@@ -220,6 +222,8 @@ def main():
         print('note: ' + n)
     if a.dry_run:
         return
+    if a.fetch_at_build and (stomps or use_enum):
+        raise SystemExit('--fetch-at-build uses the SDK template as is: no --stomp, and no boxy selector (use a knob-only panel)')
 
     # ---- template
     tpl = open(fetch('resources/templates/pedal-%s-%s.html' % (model, panel))).read()
@@ -322,6 +326,24 @@ def main():
                     pass
     env = dict(os.environ, PB_FONTS_DIR=fonts)
     subprocess.run([sys.executable, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'render_face.py'), b], check=True, env=env)
+
+    if a.fetch_at_build:
+        # keep modgui.ttl (model/panel/color/knob/ports: mod-ui renders the SDK template from them),
+        # the screenshot and the thumbnail; list everything else for the recipe to download
+        base = SDK + 'resources/'
+        csss = ['pedals/%s/%s.css' % (fam, fam)] + ([kcss[len('resources/'):]] if model != 'boxy-small' and fam != 'british' else [])
+        lines = ['# Downloaded at build time by the recipe (tools/assemble_recipe.py). mod-sdk %s, GPL-3.0.' % SDK_SHA[:8],
+                 '# <path in modgui/>  <url> [<url> ...]   (several urls are joined into one file)',
+                 'icon-%s.html  %stemplates/pedal-%s-%s.html' % (name, base, model, panel),
+                 'stylesheet-%s.css  %s' % (name, '  '.join(base + c for c in csss))]
+        lines += ['%s  %s%s' % (u, base, u) for u in sorted(need) if os.path.exists(os.path.join(CACHE, 'resources', u))]
+        import shutil
+        for f in os.listdir(md):
+            if not f.startswith(('screenshot-', 'thumbnail-')):
+                full = os.path.join(md, f)
+                shutil.rmtree(full) if os.path.isdir(full) else os.remove(full)
+        open(os.path.join(md, 'FETCH.txt'), 'w').write('\n'.join(lines) + '\n')
+        print('fetch at build: %d files listed in modgui/FETCH.txt' % (len(lines) - 2))
 
 
 # ---------------------------------------------------------------- extra footswitches (boxy)

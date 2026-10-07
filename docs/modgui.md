@@ -81,6 +81,28 @@ What it writes: `modgui.ttl` (with `modgui:model/panel/color/knob` and the port 
 - **A stock face is a starting point.** Swap in your own background, keep the SDK's control positions, or replace the lot with real artwork (below). The ports don't change, so neither do saved pedalboards.
 - Checked in tests: all four styles, a selector and an extra footswitch render and pass the click test (mod-sdk `ba1e9be8`). Not yet seen on a unit.
 
+### Stock faces without a shell (experimental)
+
+A chat with no shell can't pack the SDK's art into a recipe, but the recipe can download it while it builds. `tools/stock_face.py --fetch-at-build` does this with a shell (it writes `modgui.ttl`, the screenshot, the thumbnail and `modgui/FETCH.txt`; `tools/assemble_recipe.py` turns the list into `wget` steps). Without a shell, write the same by hand:
+
+1. **`modgui.ttl`** with `modgui:model`, `modgui:panel`, `modgui:color`, `modgui:knob` (not for british or lata) and a `modgui:port` list of the knobs in face order (index, symbol, name). mod-ui renders the SDK template from these (`getTemplateData` in mod-ui's `modgui.js`: brand, label, color, knob, ports → controls).
+2. **In `<P>_INSTALL_TARGET_CMDS`**, one line per file, into `$($(PKG)_PKGDIR)/<name>.lv2/modgui/`:
+   `wget -q -O <dest> <url> && test -s <dest> || (echo "face: could not download <url>"; exit 1)`
+   with `<url>` = `https://raw.githubusercontent.com/mod-audio/mod-sdk/ba1e9be87b7cb50cf18169649b2cffa9c7dd2c9d/html/resources/<file>` (a pinned commit, so the files can't change). `mkdir -p` the folders first. For the stylesheet, give both CSS URLs to one `wget -O`; it joins them.
+
+| Style | `icon-<name>.html` from | `stylesheet-<name>.css` from | Art (same path under `modgui/`) |
+| --- | --- | --- | --- |
+| japanese | `templates/pedal-japanese-<panel>.html` | `pedals/japanese/japanese.css` + `knobs/japanese/japanese.css` | `pedals/japanese/<color>.png`, `knobs/japanese/<knob>.png` |
+| boxy | `templates/pedal-boxy-<panel>.html` | `pedals/boxy/boxy.css` + `knobs/boxy/boxy.css` | `pedals/boxy<size>/<color>.png` (size `75` for 4, 7, 8 knobs, otherwise none), `knobs/boxy/<knob>.png`, `pedals/footswitch.png` |
+| british | `templates/pedal-british-4-knobs.html` | `pedals/british/british.css` | `pedals/british/metallic.png`, `knobs/british/british.png`, `pedals/footswitch.png` |
+| lata | `templates/pedal-lata-<panel>.html` | `pedals/lata/lata.css` + `knobs/lata/lata.css` | `pedals/lata/<color>.png`, `knobs/lata/lata.png`, `pedals/footswitch.png` |
+
+Panels, colours and knobs: the "Holds" column above, or `--list`. Knob panels only: no sliders, extra footswitches or boxy selector this way (they need a shell).
+
+**Screenshot and thumbnail without a shell:** download the pedal art a second time as `screenshot-<name>.png` and `thumbnail-<name>.png`. It shows the empty pedal in the plugin list; a shell can render the real one later (a version bump).
+
+**Status:** works in the local harness (the files land in the bundle; mod-ui's source renders SDK templates this way). **Not yet confirmed: whether builder.mod.audio allows downloads during a build,** or how a large thumbnail looks in the plugin list. Test recipe: `tests/face-fetch-test.mk`. If it fails with "face: could not download", the builder is offline: drop the face, and don't offer this again.
+
 ## Placeholder faces
 
 Ship a face from the first upload, even a placeholder (see the tuna-can lesson). A stock face (above) usually looks better for the same effort; the placeholder uses no third-party art, and handles any mix of controls. `tools/placeholder_face.py <bundle>.lv2 --title "Name" --brand "Maker"` reads the TTL and draws one: knobs for numeric ports, switches for toggles and enumerations, a footswitch for bypass, all labelled and marked "placeholder face". It writes `modgui.ttl`, the template, CSS and images, links `modgui.ttl` from the manifest, and renders the screenshot and thumbnail. The art is drawn by the script, so it's free to share. Re-run it after changing ports.

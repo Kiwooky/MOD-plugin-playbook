@@ -18,6 +18,9 @@ How things are embedded (patterns proven on builder.mod.audio):
     because Linux refuses environment variables over 128 KB
   - binary files: base64 inside a define, decoded with base64 -d at install
   - a literal $ is escaped to $$ automatically
+  - EXPERIMENTAL: if modgui/FETCH.txt exists (tools/stock_face.py --fetch-at-build), the
+    files it lists are downloaded with wget at install time instead of being embedded,
+    so a stock face costs a few lines. Needs network on the builder; not yet confirmed.
 """
 import argparse, base64, os, re, sys
 
@@ -83,7 +86,7 @@ def main():
         dirs.sort()
         rel = os.path.relpath(root, bundle_dir)
         for fn in sorted(files):
-            if fn.endswith('_dsp.so'):
+            if fn.endswith('_dsp.so') or (rel == 'modgui' and fn == 'FETCH.txt'):
                 continue
             src = os.path.join(root, fn)
             relp = fn if rel == '.' else os.path.join(rel, fn)
@@ -102,6 +105,18 @@ def main():
                 blocks.append('define %s\n%s\nendef\n' % (var, b64lines(open(src, 'rb').read())))
                 install.append('\t$(file >%s,$(%s))' % (t, var))
                 install.append('\tbase64 -d %s > %s' % (t, dest))
+
+    fetch = os.path.join(bundle_dir, 'modgui', 'FETCH.txt')
+    if os.path.exists(fetch):
+        for line in open(fetch):
+            parts = line.split()
+            if not parts or parts[0].startswith('#'):
+                continue
+            dest, urls = '%s/modgui/%s' % (pkg, parts[0]), parts[1:]
+            install.append('\tmkdir -p %s' % os.path.dirname(dest))
+            install.append('\twget -q -O %s %s && test -s %s || (echo "face: could not download %s"; exit 1)'
+                           % (dest, ' '.join(urls), dest, ' '.join(urls)))
+            n += 1
 
     header = ''
     if a.header:

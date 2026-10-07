@@ -25,7 +25,7 @@ Copy `templates/plugin/tests/test_simple_echo.py`. Each test is tagged with its 
 Every plugin:
 
 - **Timing / tuning** at 44.1, 48 and 96 kHz (the first echo lands on the Time setting, a filter's corner is where it should be, …).
-- **Levels:** as the spec says (unity, or "+12 dB at Level max" for a boost); at default settings, about as loud as bypass.
+- **Levels:** as the spec says (unity, or "+12 dB at Level max" for a boost); at default settings, average (RMS) level within ±3 dB of bypass, on a guitar-level signal. Peaks don't count: a drive squashes them.
 - **Bypass:** dry at exactly unity, no step bigger than the signal's own.
 - **Torture:** every knob at its extreme, hot input, three sample rates: finite.
 - **No ticks** with musical input (`pluck_train` + `tick_count`).
@@ -35,7 +35,7 @@ By trait:
 
 - **Tail:** bypass with Tails on (the tail rings out) and off (the wet fades).
 - **Feedback loop:** torture at max feedback stays under 0 dBFS; the runaway grid.
-- **Nonlinear / gain:** no aliasing at full gain (a 3–5 kHz sine makes no tones below it); gain at Level max as specified.
+- **Nonlinear / gain:** no aliasing at full gain (a 3–5 kHz sine makes no tones below it); gain at Level max as specified; default loudness against bypass (RMS).
 - **Level-sensitive:** at the source's real level.
 
 - **Reverbs:** RT60 (`rt60`) at all three rates (agreeing within a few tenths of a second), the decay knob monotonic over its range, pre-delay by onset (`onset_ms`), stereo outputs decorrelated (|corr| < 0.2), and the tail reaching silence.
