@@ -10,7 +10,7 @@ It works with **any AI that can fetch a link**, from a plain chat to a coding ag
 
 Open a chat with your AI and send it this:
 
-> Read https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/AGENTS.md and help me build a plugin for my MOD.
+> Read https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/AGENTS.md?v=0.4.0 and help me build a plugin for my MOD.
 
 It reads the cookbook and the playbook, asks what you'd like to build, proposes the knobs, and hands you a `.mk` file. Upload that at [builder.mod.audio/buildroot](https://builder.mod.audio/buildroot) with your MOD connected over USB, then play it and tell the AI what you heard.
 

@@ -13,6 +13,10 @@ This playbook started from a hall reverb's handover and an oil-can delay build. 
 
 > I'm building a shared MOD plugin playbook for the community (any LLM agent should be able to use it). Look back over this whole session and list everything we learned that would help someone building a different plugin: build/upload problems and their fixes, MOD/mod-ui quirks, DSP patterns, test techniques, face (modgui) techniques, and ways of working that saved time. For each item give: the rule in one line, what happened that taught it, and whether it's verified (on hardware / in tests) or only believed. Leave out things specific to this one plugin's sound. Also flag anything we did that turned out to be a mistake.
 
+## Before you push
+
+Run `python3 tools/bump_links.py <new version>` and add that version to `CHANGELOG.md`. It stamps the playbook's GitHub links with `?v=<version>` and rebuilds `ALL-IN-ONE.md`. AI fetch services cache GitHub pages for hours; without a new `?v=`, people's AIs can read the old `AGENTS.md` after you've pushed the new one.
+
 ## How to add it
 
 - Rules with their incident → `docs/lessons.md`, plus the topic doc they belong to (`dsp.md`, `testing.md`, …).
