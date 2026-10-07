@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.1 — 2026-10-07
+
+- **The no-shell face recipe now lives in `AGENTS.md` itself** (`modgui.ttl` example, the download line, the file table per style, colours), with a link to the working `tests/face-fetch-test.mk`. A second free-account run built a fuzz and told the person "a single `.mk` can't carry the face", either from a stale `AGENTS.md` or because `docs/modgui.md` didn't fetch. One fetch now carries everything.
+- Links stamped `?v=0.4.1`.
+
 ## 0.4.0 — 2026-10-07
 
 One link to start: point any AI at `AGENTS.md` and it has everything it needs.

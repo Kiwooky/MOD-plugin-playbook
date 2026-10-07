@@ -10,26 +10,26 @@ Every path in this file is relative to the repo root.
 
 - **You have a shell:** `git clone https://github.com/Kiwooky/MOD-plugin-playbook` and work inside it. If the clone is blocked, carry on as below.
 - **You can fetch web pages:** use the links in the table below, **exactly as written** (`github.com/.../blob/main/...` pages). GitHub blocks automated fetches of folder (`/tree/`) and `/raw/` URLs, and some chat apps refuse `raw.githubusercontent.com` or any URL you build yourself. Don't construct URLs and don't search for the files.
-- **A fetch fails, or you can't fetch at all:** retry once, then stop and ask the person to attach one file: [**`ALL-IN-ONE.md`**](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/ALL-IN-ONE.md?v=0.4.0). It holds this guide, the cookbook's recipe instructions with its worked example, the key docs and the template plugin. They open that link, click the download button (↓, "Download raw file"), and attach it to the chat. Don't spend minutes working around a blocked fetch.
+- **A fetch fails, or you can't fetch at all:** retry once, then stop and ask the person to attach one file: [**`ALL-IN-ONE.md`**](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/ALL-IN-ONE.md?v=0.4.1). It holds this guide, the cookbook's recipe instructions with its worked example, the key docs and the template plugin. They open that link, click the download button (↓, "Download raw file"), and attach it to the chat. Don't spend minutes working around a blocked fetch.
 
 | File | What |
 | --- | --- |
-| [`docs/effect-profile.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/effect-profile.md?v=0.4.0) | Where the idea starts; traits → rules, tests, template parts |
-| [`docs/path-a-single-recipe.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/path-a-single-recipe.md?v=0.4.0) | Single `.mk` for the Online Builder |
-| [`docs/lv2-and-mod-rules.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/lv2-and-mod-rules.md?v=0.4.0) | TTL, ports, bypass, versioning, footswitches |
-| [`docs/dsp.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/dsp.md?v=0.4.0) | DSP patterns for MOD's CPUs |
-| [`docs/hardware-feedback.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/hardware-feedback.md?v=0.4.0) | Turning "it sounds wrong" into a fix |
-| [`docs/modgui.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/modgui.md?v=0.4.0) | Pedal faces |
-| [`docs/testing.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/testing.md?v=0.4.0) | The test rig |
-| [`docs/process.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/process.md?v=0.4.0) | Stages from idea to release |
-| [`docs/path-b-github-repo.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/path-b-github-repo.md?v=0.4.0) | GitHub repo + package `.mk` |
-| [`docs/lessons.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/lessons.md?v=0.4.0) | Every rule with its incident |
-| [`docs/known-mod-issues.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/known-mod-issues.md?v=0.4.0) | MOD-side bugs that look like plugin bugs |
-| [`docs/presets.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/presets.md?v=0.4.0) | Factory presets |
-| [`templates/plugin/plugins/simple-echo/SimpleEchoPlugin.cpp`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/templates/plugin/plugins/simple-echo/SimpleEchoPlugin.cpp?v=0.4.0) | Template plugin source (tagged by trait) |
-| [`templates/plugin/plugins/simple-echo/DistrhoPluginInfo.h`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/templates/plugin/plugins/simple-echo/DistrhoPluginInfo.h?v=0.4.0) | Template header |
-| [`templates/plugin/bundle/simple-echo.lv2/simple-echo.ttl`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/templates/plugin/bundle/simple-echo.lv2/simple-echo.ttl?v=0.4.0) | Template TTL |
-| [`templates/spec-template.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/templates/spec-template.md?v=0.4.0) | Spec template |
+| [`docs/effect-profile.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/effect-profile.md?v=0.4.1) | Where the idea starts; traits → rules, tests, template parts |
+| [`docs/path-a-single-recipe.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/path-a-single-recipe.md?v=0.4.1) | Single `.mk` for the Online Builder |
+| [`docs/lv2-and-mod-rules.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/lv2-and-mod-rules.md?v=0.4.1) | TTL, ports, bypass, versioning, footswitches |
+| [`docs/dsp.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/dsp.md?v=0.4.1) | DSP patterns for MOD's CPUs |
+| [`docs/hardware-feedback.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/hardware-feedback.md?v=0.4.1) | Turning "it sounds wrong" into a fix |
+| [`docs/modgui.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/modgui.md?v=0.4.1) | Pedal faces |
+| [`docs/testing.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/testing.md?v=0.4.1) | The test rig |
+| [`docs/process.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/process.md?v=0.4.1) | Stages from idea to release |
+| [`docs/path-b-github-repo.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/path-b-github-repo.md?v=0.4.1) | GitHub repo + package `.mk` |
+| [`docs/lessons.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/lessons.md?v=0.4.1) | Every rule with its incident |
+| [`docs/known-mod-issues.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/known-mod-issues.md?v=0.4.1) | MOD-side bugs that look like plugin bugs |
+| [`docs/presets.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/presets.md?v=0.4.1) | Factory presets |
+| [`templates/plugin/plugins/simple-echo/SimpleEchoPlugin.cpp`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/templates/plugin/plugins/simple-echo/SimpleEchoPlugin.cpp?v=0.4.1) | Template plugin source (tagged by trait) |
+| [`templates/plugin/plugins/simple-echo/DistrhoPluginInfo.h`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/templates/plugin/plugins/simple-echo/DistrhoPluginInfo.h?v=0.4.1) | Template header |
+| [`templates/plugin/bundle/simple-echo.lv2/simple-echo.ttl`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/templates/plugin/bundle/simple-echo.lv2/simple-echo.ttl?v=0.4.1) | Template TTL |
+| [`templates/spec-template.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/templates/spec-template.md?v=0.4.1) | Spec template |
 
 ### Required reading, before your first reply
 
@@ -55,6 +55,50 @@ The cookbook is right about the recipe's shape. These are the gaps it leaves, ea
 Without a shell you can't run the playbook's tools, so write the `.mk` by hand in the cookbook's shape with these overrides applied. Copy the patterns from the template plugin (`templates/plugin/plugins/simple-echo/SimpleEchoPlugin.cpp` and `templates/plugin/bundle/simple-echo.lv2/simple-echo.ttl`): each part is tagged with the trait it serves (`[every]`, `[tail]`, `[feedback]`, `[buffer]`, `[mix]`); keep what your effect needs (`docs/effect-profile.md`).
 
 **A build against a stand-in only proves the code parses.** Without DPF itself (a sandbox that can't clone it), you can't know it compiles on the builder: don't write your own DPF stand-in and call it a build. Say plainly that the first upload is the compile test, and that a build 2 may be needed. The TTL version numbers follow `docs/lv2-and-mod-rules.md` (Versioning); don't guess them.
+
+### A stock pedal face in a single `.mk` (works without a shell)
+
+A recipe *can* carry a proper MOD pedal face: it downloads the art while it builds. Verified on builder.mod.audio and a Duo; the working example is [`tests/face-fetch-test.mk`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/tests/face-fetch-test.mk?v=0.4.1). Never tell the person "a single `.mk` can't have a face". Knob-only faces this way (no sliders, selectors or extra footswitches); toggles and enumerations stay in the plugin's settings.
+
+1. Write `modgui.ttl` into the bundle like the other TTLs, and add it to `manifest.ttl` (`rdfs:seeAlso <name.ttl> , <modgui.ttl>`). mod-ui fills the SDK template from it:
+
+```turtle
+@prefix lv2:    <http://lv2plug.in/ns/lv2core#> .
+@prefix modgui: <http://moddevices.com/ns/modgui#> .
+<YOUR-URI>
+    modgui:gui [
+        modgui:resourcesDirectory <modgui> ;
+        modgui:iconTemplate <modgui/icon-NAME.html> ;
+        modgui:stylesheet <modgui/stylesheet-NAME.css> ;
+        modgui:screenshot <modgui/screenshot-NAME.png> ;
+        modgui:thumbnail <modgui/thumbnail-NAME.png> ;
+        modgui:brand "MAKER" ; modgui:label "PLUGIN NAME" ;
+        modgui:model "boxy" ; modgui:panel "3-knobs" ;
+        modgui:color "brown" ; modgui:knob "gold" ;
+        modgui:port [ lv2:index 0 ; lv2:symbol "fuzz" ; lv2:name "Fuzz" ] ,
+                    [ lv2:index 1 ; lv2:symbol "tone" ; lv2:name "Tone" ] ,
+                    [ lv2:index 2 ; lv2:symbol "level" ; lv2:name "Level" ] ;
+    ] .
+```
+
+2. At the end of `<P>_INSTALL_TARGET_CMDS`, download each file into `$($(PKG)_PKGDIR)/NAME.lv2/modgui/` (`mkdir -p` its folder first). `$S` stands for `https://raw.githubusercontent.com/mod-audio/mod-sdk/ba1e9be87b7cb50cf18169649b2cffa9c7dd2c9d/html/resources`; write it out in full. One line per file:
+
+```make
+	wget -q -O $($(PKG)_PKGDIR)/NAME.lv2/modgui/icon-NAME.html $S/templates/pedal-boxy-3-knobs.html && test -s $($(PKG)_PKGDIR)/NAME.lv2/modgui/icon-NAME.html || (echo "face: could not download"; exit 1)
+```
+
+| Style (`modgui:model`) | Panels | Template | Stylesheet (both URLs in one `wget -O`) | Art, same path under `modgui/` |
+| --- | --- | --- | --- | --- |
+| `japanese` (Boss-like) | `4-knobs` `5-knobs` `7-a-knobs` `8-knobs` | `templates/pedal-japanese-PANEL.html` | `pedals/japanese/japanese.css` `knobs/japanese/japanese.css` | `pedals/japanese/COLOR.png` `knobs/japanese/KNOB.png` |
+| `boxy` (Hammond, MXR-like) | `1-knob` `2-knobs` … `8-knobs` | `templates/pedal-boxy-PANEL.html` | `pedals/boxy/boxy.css` `knobs/boxy/boxy.css` | `pedals/boxySIZE/COLOR.png` (SIZE `75` for 4, 7 and 8 knobs, else empty) `knobs/boxy/KNOB.png` `pedals/footswitch.png` |
+| `british` | `4-knobs` | `templates/pedal-british-4-knobs.html` | `pedals/british/british.css` | `pedals/british/metallic.png` `knobs/british/british.png` `pedals/footswitch.png` |
+| `lata` (tin can) | `7-knobs` `8-knobs` | `templates/pedal-lata-PANEL.html` | `pedals/lata/lata.css` `knobs/lata/lata.css` | `pedals/lata/COLOR.png` `knobs/lata/lata.png` `pedals/footswitch.png` |
+
+Colours: japanese black blue brown cream cyan darkblue gray green orange petrol pink purple racing red white yellow (knobs: same list). boxy black blue brown cream cyan darkblue dots flowerpower gold gray green lava orange petrol pink purple racing red slime tribal1 tribal2 warning white wood0–wood4 yellow zinc (knobs: aluminium black blue bronze copper gold green silver steel petrol purple). lata: anonymous atomic black blue brown camouflage che cream cyan darkblue gray green humphreys orange petrol pink purple racing red star skull white yellow. Fewer knobs than the panel holds is fine (japanese 4-knobs with 3).
+
+3. Screenshot and thumbnail: download the pedal art (`pedals/.../COLOR.png`) twice more, as `screenshot-NAME.png` and `thumbnail-NAME.png`.
+
+The art is mod-sdk's, GPL-3.0; credit it in the README. More in `docs/modgui.md`.
 
 ## 0. The kick-off
 
@@ -87,7 +131,7 @@ Then tick the effect's **traits** (tail, feedback loop, buffer, nonlinear/gain, 
    - **Metal British box:** `british`, up to 4 knobs. **Tin can:** `lata`, up to 8 knobs.
    - **Their own artwork:** a custom face (`docs/modgui.md`), after the sound works.
 
-   Plus a colour. You work out the size: the knob count picks the panel, and every extra footswitch they'd stomp (Tails, Hold, Tap) widens the box. Check what fits with `tools/stock_face.py <bundle> --style <s> --dry-run` before proposing. Without a shell, offer it too: the recipe downloads MOD's template and art while it builds (`docs/modgui.md`, Stock faces without a shell; verified on builder.mod.audio and a Duo). Knob-only panels that way. If a build ever fails with "face: could not download", ship the next build without the face and say why.
+   Plus a colour. You work out the size: the knob count picks the panel, and every extra footswitch they'd stomp (Tails, Hold, Tap) widens the box. Check what fits with `tools/stock_face.py <bundle> --style <s> --dry-run` before proposing. Without a shell, offer it too: the recipe downloads MOD's template and art while it builds ("A stock pedal face in a single `.mk`" above; verified on builder.mod.audio and a Duo). Knob-only panels that way. If a build ever fails with "face: could not download", ship the next build without the face and say why.
 5. **What you'll base it on:** for a reference sound, what your research found and the gear you'll model; for specific gear, what they can send. Keep a sources table (documented vs guessed).
 
 The URI follows from the name (`urn:mod-cookbook:<name>` on path A) and never changes once shared. The licence is GPL-3.0-or-later, inherited from the template; say so if they ask, and change it only if they bring their own code. Record the answers at the top of the spec (`templates/spec-template.md`); without files, keep the spec as a short block in the chat.
