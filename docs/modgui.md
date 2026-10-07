@@ -99,7 +99,7 @@ A chat with no shell can't pack the SDK's art into a recipe, but the recipe can 
 
 Panels, colours and knobs: the "Holds" column above, or `--list`. Knob panels only: no sliders, extra footswitches or boxy selector this way (they need a shell).
 
-**Screenshot and thumbnail without a shell:** download the pedal art a second time as `screenshot-<name>.png` and `thumbnail-<name>.png`. It shows the empty pedal in the plugin list; a shell can render the real one later (a version bump).
+**Screenshot and thumbnail without a shell:** download the pedal art a second time as `screenshot-<name>.png` and `thumbnail-<name>.png`. It shows the empty pedal body in the plugin list (seen on a Duo with a free-chat build, 2026-10-08: a plain brown box above the plugin's name); a shell can render the real one later (a version bump).
 
 **Status: verified on builder.mod.audio and a Duo (2026-10-07).** `tests/face-fetch-test.mk` built on the Online Builder, downloading the template, CSS and art during the build, and the white japanese face rendered on the pedalboard with its three knobs, labels, LED and brand. Its rendered thumbnail looked right in the plugin list. Not yet seen: the pedal art standing in as screenshot and thumbnail (the test shipped rendered ones). If a build ever fails with "face: could not download", GitHub or the builder's network was down: retry once, then ship without the face.
 

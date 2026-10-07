@@ -63,4 +63,4 @@ Ship presets inside the bundle: `presets.ttl` holding `pset:Preset` resources (`
 
 ## Brand and maker
 
-Change `DISTRHO_PLUGIN_BRAND`, `getMaker()`, `foaf:name` and `modgui:brand` together.
+Change `DISTRHO_PLUGIN_BRAND`, `getMaker()`, `foaf:name` and `modgui:brand` together. Where it shows: printed on stock faces (big, in boxy's brand box), and as the second line under the plugin's name in MOD's plugin list (truncated to about 17 characters). Use the person's name or alias, or "MOD Cookbook"; never invent one.

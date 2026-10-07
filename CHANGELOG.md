@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.2 — 2026-10-08
+
+From a third free-account run, which shipped a working boxy face from a single `.mk`, built in a chat with no shell (verified on a Duo):
+- **Maker:** the agent invented "Gravel Slide Project", which landed big on the face and as the plugin list's second line. `AGENTS.md` now says what the maker shows up as, and to use the person's name or exactly "MOD Cookbook", never an invented one.
+- **Thumbnail without a shell:** the pedal-art stand-in shows as an empty pedal body in the plugin list. Documented as expected; the agent tells the person, and a real render needs a shell.
+- Links stamped `?v=0.4.2`.
+
 ## 0.4.1 — 2026-10-07
 
 - **The no-shell face recipe now lives in `AGENTS.md` itself** (`modgui.ttl` example, the download line, the file table per style, colours), with a link to the working `tests/face-fetch-test.mk`. A second free-account run built a fuzz and told the person "a single `.mk` can't carry the face", either from a stale `AGENTS.md` or because `docs/modgui.md` didn't fetch. One fetch now carries everything.
