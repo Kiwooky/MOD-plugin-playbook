@@ -18,7 +18,7 @@ A repo created with GitHub's "Add a license" option starts with that licence in 
 
 `templates/plugin/` has all of this except `dpf/` and the docs. **Add DPF as a git submodule** with `tools/add_dpf_submodule.sh` (pinned to the commit the playbook tests against). This is DPF's recommended setup. The package `.mk` fetches it with two lines MOD's own packages use (`<P>_GIT_SUBMODULES = y` and `<P>_PRE_DOWNLOAD_HOOKS += MOD_PLUGIN_BUILDER_DOWNLOAD_WITH_SUBMODULES`, from mod-plugin-builder; Wasted Audio's `wstd-dlay` is one example). Verified on builder.mod.audio (2026-10-08, `tests/submodule-test.mk`).
 
-Repos made with earlier playbook versions have a vendored copy of DPF in `dpf/`. To switch: `git rm -r dpf`, commit, run `tools/add_dpf_submodule.sh`, commit, and update the package `.mk` from the template. Ports and URI don't change.
+Repos made with earlier playbook versions have a vendored copy of DPF in `dpf/`. To switch: `git rm -r dpf` and commit, then run `tools/add_dpf_submodule.sh` and commit, and update the package `.mk` from the template. Keep the removal and the submodule in separate commits, or commit in Terminal: GitHub Desktop fails on a combined commit with "dpf: is a directory - add individual files instead". Ports and URI don't change.
 
 ## Identity
 
