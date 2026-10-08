@@ -43,4 +43,4 @@ A face adds roughly 200–300 KB (background JPEG, knob strip as a 256-colour PN
 
 ## Moving to path B later
 
-Everything in `plugins/` and `bundle/` carries over unchanged. Add the top-level `Makefile`, the package file, and `dpf/` (`tools/vendor_dpf.sh`). See `docs/path-b-github-repo.md`. If the plugin was shared under `urn:mod-cookbook:<name>`, decide deliberately whether to keep that URI (pedalboards keep working) or start a new identity.
+Everything in `plugins/` and `bundle/` carries over unchanged. Add the top-level `Makefile`, the package file, and DPF as a submodule (`tools/add_dpf_submodule.sh`). See `docs/path-b-github-repo.md`. If the plugin was shared under `urn:mod-cookbook:<name>`, decide deliberately whether to keep that URI (pedalboards keep working) or start a new identity.

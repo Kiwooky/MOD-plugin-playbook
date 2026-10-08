@@ -4,7 +4,8 @@
 #   make -f tools/package_harness.mk PACKAGE=mod-plugin-builder/<name>/<name>.mk \
 #        SRC=<copy of the repo> TGT=<install root> [CROSS=arm32|arm64]
 #
-# SRC   a scratch copy of the repo (the build writes into it), standing in for $(@D)
+# SRC   a scratch copy of the repo with its submodules, standing in for $(@D):
+#       git clone --recursive <your repo> <SRC>  (what the builder's submodule hook does)
 # TGT   where `make install DESTDIR=...` lands; the bundle ends up in
 #       $(TGT)/usr/lib/lv2/<name>.lv2
 #

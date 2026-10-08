@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.0 — 2026-10-08
+
+- **Path B: DPF as a git submodule, no more vendoring.** The package `.mk` fetches submodules with mod-plugin-builder's `MOD_PLUGIN_BUILDER_DOWNLOAD_WITH_SUBMODULES` hook, as MOD's own packages do (26 of them, including Wasted Audio's `wstd-dlay`). Verified on builder.mod.audio with `tests/submodule-test.mk`. `tools/vendor_dpf.sh` is replaced by `tools/add_dpf_submodule.sh`; the template package `.mk`, the CI workflow (`submodules: recursive`) and `package_harness.mk` follow. Migration steps for older repos in `path-b-github-repo.md`. Prompted by a plugin developer on the MOD forum.
+
 ## 0.4.2 — 2026-10-08
 
 From a third free-account run, which shipped a working boxy face from a single `.mk`, built in a chat with no shell (verified on a Duo):
