@@ -10,32 +10,32 @@ Every path in this file is relative to the repo root.
 
 - **You have a shell:** `git clone https://github.com/Kiwooky/MOD-plugin-playbook` and work inside it. If the clone is blocked, carry on as below. In Claude's chat app, check for a code sandbox before deciding you have none: "Code execution and file creation" is on by default on every plan, free included, and its network reaches GitHub, so a clone also gets you past fetch problems.
 - **You can fetch web pages:** use the links in the table below, **exactly as written** (`github.com/.../blob/main/...` pages). GitHub blocks automated fetches of folder (`/tree/`) and `/raw/` URLs, and some chat apps refuse `raw.githubusercontent.com` or any URL you build yourself. Don't construct URLs and don't search for the files.
-- **A fetch fails, or you can't fetch at all:** retry once, then stop and ask the person to attach one file. Never ask them to find, fetch or paste other files, and don't go searching the web or the forum for the recipe format: everything you need is in this repo. The one file: [**`ALL-IN-ONE.md`**](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/ALL-IN-ONE.md?v=0.9.3). It holds this guide, the cookbook's recipe instructions with its worked example, the key docs and the template plugin. They open that link, click the download button (↓, "Download raw file"), and attach it to the chat. Don't spend minutes working around a blocked fetch.
+- **A fetch fails, or you can't fetch at all:** retry once, then stop and ask the person to attach one file. Never ask them to find, fetch or paste other files, and don't go searching the web or the forum for the recipe format: everything you need is in this repo. The one file: [**`ALL-IN-ONE.md`**](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/ALL-IN-ONE.md?v=0.9.4). It holds this guide, the cookbook's recipe instructions with its worked example, the key docs and the template plugin. They open that link, click the download button (↓, "Download raw file"), and attach it to the chat. Don't spend minutes working around a blocked fetch.
 
 | File | What |
 | --- | --- |
-| [`docs/effect-profile.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/effect-profile.md?v=0.9.3) | Where the idea starts; traits → rules, tests, template parts |
-| [`docs/path-a-single-recipe.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/path-a-single-recipe.md?v=0.9.3) | Single `.mk` for the Online Builder |
-| [`docs/lv2-and-mod-rules.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/lv2-and-mod-rules.md?v=0.9.3) | TTL, ports, bypass, versioning, footswitches |
-| [`docs/dsp.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/dsp.md?v=0.9.3) | DSP rules for every plugin; it points to the trait files below |
-| [`docs/dsp-time.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/dsp-time.md?v=0.9.3) · [`dsp-reverb.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/dsp-reverb.md?v=0.9.3) · [`dsp-drive.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/dsp-drive.md?v=0.9.3) · [`dsp-envelope.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/dsp-envelope.md?v=0.9.3) · [`dsp-pitch.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/dsp-pitch.md?v=0.9.3) | DSP by trait (delay/modulation, reverb, drive, envelope, pitch): read only the ones your effect has |
-| [`docs/hardware-feedback.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/hardware-feedback.md?v=0.9.3) | Turning "it sounds wrong" into a fix |
-| [`docs/modgui.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/modgui.md?v=0.9.3) | Pedal faces |
-| [`docs/testing.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/testing.md?v=0.9.3) | The test rig |
-| [`docs/process.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/process.md?v=0.9.3) | Stages from idea to release |
-| [`docs/path-b-github-repo.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/path-b-github-repo.md?v=0.9.3) | GitHub repo + package `.mk` |
-| [`docs/lessons.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/lessons.md?v=0.9.3) | Every rule with its incident |
-| [`docs/known-mod-issues.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/known-mod-issues.md?v=0.9.3) | MOD-side bugs that look like plugin bugs |
-| [`docs/presets.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/presets.md?v=0.9.3) | Factory presets |
-| [`templates/plugin/plugins/simple-echo/SimpleEchoPlugin.cpp`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/templates/plugin/plugins/simple-echo/SimpleEchoPlugin.cpp?v=0.9.3) | Template plugin source (tagged by trait) |
-| [`templates/plugin/plugins/simple-echo/DistrhoPluginInfo.h`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/templates/plugin/plugins/simple-echo/DistrhoPluginInfo.h?v=0.9.3) | Template header |
-| [`templates/plugin/bundle/simple-echo.lv2/simple-echo.ttl`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/templates/plugin/bundle/simple-echo.lv2/simple-echo.ttl?v=0.9.3) | Template TTL |
-| [`templates/spec-template.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/templates/spec-template.md?v=0.9.3) | Spec template |
+| [`docs/effect-profile.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/effect-profile.md?v=0.9.4) | Where the idea starts; traits → rules, tests, template parts |
+| [`docs/path-a-single-recipe.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/path-a-single-recipe.md?v=0.9.4) | Single `.mk` for the Online Builder |
+| [`docs/lv2-and-mod-rules.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/lv2-and-mod-rules.md?v=0.9.4) | TTL, ports, bypass, versioning, footswitches |
+| [`docs/dsp.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/dsp.md?v=0.9.4) | DSP rules for every plugin; it points to the trait files below |
+| [`docs/dsp-time.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/dsp-time.md?v=0.9.4) · [`dsp-reverb.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/dsp-reverb.md?v=0.9.4) · [`dsp-drive.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/dsp-drive.md?v=0.9.4) · [`dsp-envelope.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/dsp-envelope.md?v=0.9.4) · [`dsp-pitch.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/dsp-pitch.md?v=0.9.4) | DSP by trait (delay/modulation, reverb, drive, envelope, pitch): read only the ones your effect has |
+| [`docs/hardware-feedback.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/hardware-feedback.md?v=0.9.4) | Turning "it sounds wrong" into a fix |
+| [`docs/modgui.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/modgui.md?v=0.9.4) | Pedal faces |
+| [`docs/testing.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/testing.md?v=0.9.4) | The test rig |
+| [`docs/process.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/process.md?v=0.9.4) | Stages from idea to release |
+| [`docs/path-b-github-repo.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/path-b-github-repo.md?v=0.9.4) | GitHub repo + package `.mk` |
+| [`docs/lessons.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/lessons.md?v=0.9.4) | Every rule with its incident |
+| [`docs/known-mod-issues.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/known-mod-issues.md?v=0.9.4) | MOD-side bugs that look like plugin bugs |
+| [`docs/presets.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/docs/presets.md?v=0.9.4) | Factory presets |
+| [`templates/plugin/plugins/simple-echo/SimpleEchoPlugin.cpp`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/templates/plugin/plugins/simple-echo/SimpleEchoPlugin.cpp?v=0.9.4) | Template plugin source (tagged by trait) |
+| [`templates/plugin/plugins/simple-echo/DistrhoPluginInfo.h`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/templates/plugin/plugins/simple-echo/DistrhoPluginInfo.h?v=0.9.4) | Template header |
+| [`templates/plugin/bundle/simple-echo.lv2/simple-echo.ttl`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/templates/plugin/bundle/simple-echo.lv2/simple-echo.ttl?v=0.9.4) | Template TTL |
+| [`templates/spec-template.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/templates/spec-template.md?v=0.9.4) | Spec template |
 
 ### Required reading, before your first reply
 
-1. **The worked recipe:** [`examples/simple-echo.mk`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/examples/simple-echo.mk?v=0.9.3). A complete single-file recipe for the Online Builder (the template echo), with this playbook's rules already applied. Copy its shape.
-2. **MOD's cookbook prompt** (the recipe format and the builder, which this playbook builds on): our copy, [`cookbook/plugin-from-idea.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/cookbook/plugin-from-idea.md?v=0.9.3). Its examples are copied alongside: [`cookbook/gain.mk`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/cookbook/gain.mk?v=0.9.3), and for delay lines or LFOs [`cookbook/ce2-chorus.mk`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/cookbook/ce2-chorus.mk?v=0.9.3). (Originals: github.com/mod-audio/mod-plugin-cookbook, MIT.)
+1. **The worked recipe:** [`examples/simple-echo.mk`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/examples/simple-echo.mk?v=0.9.4). A complete single-file recipe for the Online Builder (the template echo), with this playbook's rules already applied. Copy its shape.
+2. **MOD's cookbook prompt** (the recipe format and the builder, which this playbook builds on): our copy, [`cookbook/plugin-from-idea.md`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/cookbook/plugin-from-idea.md?v=0.9.4). Its examples are copied alongside: [`cookbook/gain.mk`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/cookbook/gain.mk?v=0.9.4), and for delay lines or LFOs [`cookbook/ce2-chorus.mk`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/cookbook/ce2-chorus.mk?v=0.9.4). (Originals: github.com/mod-audio/mod-plugin-cookbook, MIT.)
 3. **The rest of this file.** Read the `docs/` it points to as you reach each stage, not all up front.
 
 ### Where the playbook overrides the cookbook
@@ -59,7 +59,7 @@ Without a shell you can't run the playbook's tools, so write the `.mk` by hand: 
 
 ### A stock pedal face in a single `.mk` (works without a shell)
 
-A recipe *can* carry a proper MOD pedal face: it downloads the art while it builds. Verified on builder.mod.audio and a Duo; the working example is [`tests/face-fetch-test.mk`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/tests/face-fetch-test.mk?v=0.9.3). Never tell the person "a single `.mk` can't have a face". Knob-only faces this way (no sliders, selectors or extra footswitches); toggles and enumerations stay in the plugin's settings.
+A recipe *can* carry a proper MOD pedal face: it downloads the art while it builds. Verified on builder.mod.audio and a Duo; the working example is [`tests/face-fetch-test.mk`](https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/tests/face-fetch-test.mk?v=0.9.4). Never tell the person "a single `.mk` can't have a face". Knob-only faces this way (no sliders, selectors or extra footswitches); toggles and enumerations stay in the plugin's settings.
 
 1. Write `modgui.ttl` into the bundle like the other TTLs, and add it to `manifest.ttl` (`rdfs:seeAlso <name.ttl> , <modgui.ttl>`). mod-ui fills the SDK template from it:
 
@@ -109,6 +109,7 @@ Be the friendly expert at the bench: one step at a time, in plain words, and tec
 - **Talk about the sound and the controls,** not the machinery. Don't mention this playbook, AGENTS.md, overrides, traits, paths, the gate, ports, TTL or bypass designations. Do the right things silently: bypass, version numbers, required features, tests.
 - **Your limits are your problem.** If you can't fetch something or run the checks, work around it. Tell them once, at handover, in one plain line, and only what affects them ("the first upload doubles as the build test").
 - **Don't research what this repo answers:** the recipe format, the builder's hooks, size limits (a single-file recipe stays under about 850 KB; there's no line limit to worry about).
+- **Start from a clean slate.** Don't bring in plugin ideas from your memory or earlier chats; ask what they'd like to build this time. If they bring up an earlier idea, pick it up.
 - **Keep later steps for later.** The pedal face, presets, GitHub and a store release each come up when they're next, not in the first message.
 
 ## 0. The kick-off

@@ -8,13 +8,17 @@ It works with **any AI that can fetch a link**, from a plain chat to a coding ag
 
 ## Start with one link
 
-Open a chat with your AI and send it this:
+Open a new chat with your AI and send it this, exactly as written:
 
-> Read https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/AGENTS.md?v=0.9.3 and help me build a plugin for my MOD.
+> Read https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/AGENTS.md?v=0.9.4 and help me build a plugin for my MOD.
 
-It reads the cookbook and the playbook, asks what you'd like to build, proposes the knobs, and hands you a `.mk` file. Upload that at [builder.mod.audio/buildroot](https://builder.mod.audio/buildroot) with your MOD connected over USB, then play it and tell the AI what you heard.
+**Copy the link from here, not from your browser's address bar.** The `?v=` on the end matters: AI chat apps keep old copies of GitHub pages for weeks, and the plain link can hand your AI an outdated version of the guide. The number changes with every release.
 
-An AI that can run commands also builds and tests the plugin before you upload it. In a plain chat it writes the file and tells you which checks it couldn't run.
+It reads the playbook, asks what you'd like to build, proposes the knobs, and hands you a `.mk` file. Upload that at [builder.mod.audio/buildroot](https://builder.mod.audio/buildroot) with your MOD connected over USB, then play it and tell the AI what you heard.
+
+An AI that can run commands also builds and tests the plugin before you upload it. In Claude's chat app that's "Code execution and file creation" in Settings → Capabilities (on by default, free plan included), with "Allow network egress" on so it can download the playbook.
+
+**Starting fresh:** if your AI has memory of earlier chats, it may bring back an old idea. Use a new or incognito chat, or just tell it what you want to build this time.
 
 **If your AI can't open the link** (some free chat plans can't read GitHub files): open [`ALL-IN-ONE.md`](ALL-IN-ONE.md), click the download button (↓), attach the file to your chat and describe your plugin. It's the whole guide in one file.
 

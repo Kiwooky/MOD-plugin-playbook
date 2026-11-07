@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.9.4 — 2026-11-07
+
+- **Stale copies:** a test chat opened the plain `AGENTS.md` link and got a weeks-old cached copy (pre-0.4.0: raw links, old face and bypass wording); the `?v=` link returns the current file. The README now says to copy the link from the README, with its `?v=`, never from the address bar, and how to switch on Claude's code sandbox (which downloads fresh files).
+- **Clean slate:** the agent doesn't bring plugin ideas from memory or earlier chats; it asks what to build this time. The README suggests a new or incognito chat.
+
 ## 0.9.3 — 2026-11-07
 
 From a fresh free-account run:
