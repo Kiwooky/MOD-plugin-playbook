@@ -47,7 +47,7 @@ Two jobs, one number. On every path it's a **cache-buster**; on path B it's also
 - **Path B: real releases.** Bump micro for fixes, minor for new behaviour; tag releases, keep the CHANGELOG.
 - Keep `lv2:minorVersion` even and ≥ 2 (0 = pre-release, odd = unstable by LV2 convention).
 - **Keep DPF's `d_version()` in step:** major > 0 → minorVersion = minor + 2, microVersion = micro. `d_version(1,0,3)` ↔ minor 2, micro 3.
-- **Ship a face from the first upload.**
+- **A face can come later:** offer one once the sound is right. Every upload gets a new build number, so the face arrives cleanly; the tuna can only sticks to a version that shipped without one.
 - **The category and factory presets are cached too.** Changing `lv2:ReverbPlugin` to another class, or adding presets, needs a version bump to show.
 - **Stale-cache check:** hard-refresh the MOD UI (Cmd/Ctrl+Shift+R), or open `http://192.168.51.1/effect/get?uri=<uri>&nocache=1`.
 

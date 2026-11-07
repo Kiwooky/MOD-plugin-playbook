@@ -10,7 +10,7 @@ The same stages for both paths. Each ends with something checkable. Skipping one
 | 3 | **Ports** | The port table is settled; it can still change until the first public share, then never again |
 | 4 | **DSP** (`dsp.md` + your trait files) | Builds clean on three targets |
 | 5 | **Tests** (`testing.md`) | Generic checks plus one per promise in the spec; all pass natively and on the Duo build under qemu |
-| 6 | **Face** (`modgui.md`) | Stock, placeholder or real; screenshot and thumbnail rendered; ships with the first upload |
+| 6 | **Face** (`modgui.md`) | Stock, placeholder or real; screenshot and thumbnail rendered; offered once the sound is right |
 | 7 | **Upload + play** | The human installs it and plays it; the agent asks what they heard (`hardware-feedback.md`) |
 | 8 | **Iterate** | Each report → failing test → fix → version bump → upload |
 | 9 | **Release** | Path B: release checklist, frozen ports, licence, manual, presets, store steps |

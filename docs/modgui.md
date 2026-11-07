@@ -127,7 +127,7 @@ Panels, colours and knobs: the "Holds" column above, or `--list`. Knob panels on
 
 ## Placeholder faces
 
-Ship a face from the first upload, even a placeholder (see the tuna-can lesson). A stock face (above) usually looks better for the same effort; the placeholder uses no third-party art, and handles any mix of controls. `tools/placeholder_face.py <bundle>.lv2 --title "Name" --brand "Maker"` reads the TTL and draws one: knobs for numeric ports, switches for toggles and enumerations, a footswitch for bypass, all labelled and marked "placeholder face". It writes `modgui.ttl`, the template, CSS and images, links `modgui.ttl` from the manifest, and renders the screenshot and thumbnail. The art is drawn by the script, so it's free to share. Re-run it after changing ports.
+Offer a face once the sound is right; with a new build number on every upload it arrives cleanly (the tuna can only sticks to a version that shipped without one). A stock face (above) usually looks better for the same effort; the placeholder uses no third-party art, and handles any mix of controls. `tools/placeholder_face.py <bundle>.lv2 --title "Name" --brand "Maker"` reads the TTL and draws one: knobs for numeric ports, switches for toggles and enumerations, a footswitch for bypass, all labelled and marked "placeholder face". It writes `modgui.ttl`, the template, CSS and images, links `modgui.ttl` from the manifest, and renders the screenshot and thumbnail. The art is drawn by the script, so it's free to share. Re-run it after changing ports.
 
 ## Real artwork: the workflow that worked
 

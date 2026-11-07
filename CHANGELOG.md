@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.9.3 — 2026-11-07
+
+From a fresh free-account run:
+- **No more fetching MOD's repo.** Chat apps refused `mod-audio/mod-plugin-cookbook` and the agent went searching the forum. The cookbook prompt and examples are now copied into `cookbook/` (MIT, refreshed by `tools/make_all_in_one.py`), and the new `examples/simple-echo.mk` is a complete single-file recipe with the playbook's rules applied (generated from the template; builds in the harness). Required reading points only to this repo. The agent never asks the person to fetch or paste files, only to attach `ALL-IN-ONE.md` as a last resort.
+- **Code sandbox:** Claude's chat app has code execution on by default on every plan (free included), with network to GitHub; `AGENTS.md` tells agents to look for it and clone, which also gets past fetch problems.
+- **Tone:** a new "How to talk to the person" section. Friendly expert, one step at a time, plain words; no talk of overrides, bypass, gates or paths; the agent's own limits are mentioned once, at handover. The first reply is one or two sentences and a question.
+- **Face later:** the pedal face is offered once the sound is right, not in the first proposal (the build number changes every upload, so it arrives cleanly).
+
 ## 0.9.2 — 2026-11-01
 
 From Crossroads (a community drive + reverb, built with GLM 5.2):
