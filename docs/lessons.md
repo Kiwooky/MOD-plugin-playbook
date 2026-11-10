@@ -101,6 +101,8 @@ The incidents come from five plugins built while writing this playbook: a hall r
 
 ## Bypass, presets and identity
 
+- **`rdfs:seeAlso`, never `lv2:seeAlso`, in `manifest.ttl`.** A hand-written recipe from a chat without a shell used `lv2core#seeAlso`: MOD never read the plugin's TTL, so it installed with no name, category or controls and couldn't be removed from the UI. Installing a fixed build with the same bundle name replaced it. Reproduced with `lv2info` (0 ports, no name). (`AGENTS.md`, hand-written `.mk` checklist)
+
 - **Rules learned on one kind of effect get scoped, not copied.** The first versions said "Tails on/off" and "soft-knee every output" for every plugin, because they came from delays. A gain pedal has no tail, and a knee on its output squashes the boost it exists for. Rules now carry the trait they apply to. (`effect-profile.md`)
 - **Presets leave Mix alone.** A preset sets the sound, not the balance. (`presets.md`)
 - **mod-host's own bypass is an instant switch.** It copies input to output from the next block, with no crossfade; on a processed signal that pops. An `lv2:enabled` port lets the plugin fade. Source-checked (mod-host `effects.c`). (`lv2-and-mod-rules.md`)

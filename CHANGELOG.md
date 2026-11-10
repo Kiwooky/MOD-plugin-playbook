@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.9.5 — 2026-11-10
+
+- **Hand-written `.mk` checklist** in `AGENTS.md` for chats without a shell, led by the bug a ChatGPT test hit: `lv2:seeAlso` instead of `rdfs:seeAlso` in `manifest.ttl` installs a nameless plugin with no controls that can't be removed from the UI (fix: reinstall a corrected build with the same bundle name). Also URI, binary, port indices, versions and `$$`.
+
 ## 0.9.4 — 2026-11-07
 
 - **Stale copies:** a test chat opened the plain `AGENTS.md` link and got a weeks-old cached copy (pre-0.4.0: raw links, old face and bypass wording); the `?v=` link returns the current file. The README now says to copy the link from the README, with its `?v=`, never from the address bar, and how to switch on Claude's code sandbox (which downloads fresh files).
