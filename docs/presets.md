@@ -24,7 +24,7 @@ python3 tools/presets_from_device.py bundle/<name>.lv2 ~/Desktop/presets.tgz \
     [--from-uri <old URI>] [--exclude hold,freeze]
 ```
 
-It writes `presets.ttl`, lists each preset in `manifest.ttl` (re-runnable: it replaces its own block), reports symbols the plugin no longer has and ports a preset doesn't mention (those keep their current value when it loads), then reads the bundle back and checks every value. The digital delay: 10 presets, 90 values, 0 differences; `lv2info` lists all ten.
+It writes `presets.ttl`, lists each preset in `manifest.ttl` with its name (`rdfs:label`, as DPF does) (re-runnable: it replaces its own block), reports symbols the plugin no longer has and ports a preset doesn't mention (those keep their current value when it loads), then reads the bundle back and checks every value. The digital delay: 10 presets, 90 values, 0 differences; `lv2info` lists all ten.
 
 - **Leave out Mix** (and any other dry/wet balance): a preset sets the sound, not how much of it the player wants. Loading one keeps their Mix. Applies to factory presets you write by hand too.
 - **Leave out footswitch states** (`--exclude`): hold, freeze, slam, anything momentary. A preset saved with Hold on would freeze whatever is in the buffer when loaded. The bypass port is always left out.

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.9.6 — 2026-11-11
+
+- **Preset names in the manifest:** hand-written presets often listed each preset in `manifest.ttl` without its `rdfs:label`. DPF and `tools/presets_from_device.py` include it, so hosts can show names without opening `presets.ttl`. Now in the hand-written `.mk` checklist (`AGENTS.md`) and `lv2-and-mod-rules.md`. Prompted by a community report of preset names turning into long URIs when paging on a unit; a Duo showed names with and without the label, so the label isn't proven to be the cause.
+
 ## 0.9.5 — 2026-11-10
 
 - **Hand-written `.mk` checklist** in `AGENTS.md` for chats without a shell, led by the bug a ChatGPT test hit: `lv2:seeAlso` instead of `rdfs:seeAlso` in `manifest.ttl` installs a nameless plugin with no controls that can't be removed from the UI (fix: reinstall a corrected build with the same bundle name). Also URI, binary, port indices, versions and `$$`.

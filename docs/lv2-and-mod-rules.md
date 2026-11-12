@@ -61,7 +61,7 @@ MOD's settings panel lists groups by the group's `lv2:index`, then each group's 
 
 ## Factory presets
 
-Ship presets inside the bundle: `presets.ttl` holding `pset:Preset` resources (`lv2:appliesTo <plugin URI>`, `rdfs:label`, `lv2:port [ lv2:symbol … ; pset:value … ]`), each also listed in `manifest.ttl` with `rdfs:seeAlso <presets.ttl>`. Leave out the bypass port and footswitch states. From presets someone made on a unit: `docs/presets.md`.
+Ship presets inside the bundle: `presets.ttl` holding `pset:Preset` resources (`lv2:appliesTo <plugin URI>`, `rdfs:label`, `lv2:port [ lv2:symbol … ; pset:value … ]`), each also listed in `manifest.ttl` with its `rdfs:label` and `rdfs:seeAlso <presets.ttl>` (as DPF writes them: hosts can list the names without opening `presets.ttl`; `tools/presets_from_device.py` does this). Leave out the bypass port and footswitch states. From presets someone made on a unit: `docs/presets.md`.
 
 ## Footswitches and gestures
 
