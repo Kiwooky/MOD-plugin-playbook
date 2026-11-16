@@ -19,8 +19,9 @@ Renaming the template: the folder names, `NAME` in the plugin Makefile, the clas
 1. Connect the MOD over USB; its web UI opens (usually 192.168.51.1).
 2. Open https://builder.mod.audio/buildroot in Chrome and upload `dist/<name>.mk`.
 3. **The filename must match the variable prefix** (`simple-echo.mk` ↔ `SIMPLE_ECHO_`); the builder rewrites the prefix internally. The assembler enforces this.
-4. Wait for the build (the first one takes a few minutes), then click **Install**.
-5. **Bump the version before every re-upload** (`docs/lv2-and-mod-rules.md`), or MOD shows stale data.
+4. **`<P>_VERSION` and `<P>_BUNDLES` are written exactly `SIMPLE_ECHO_VERSION = <commit>` and `SIMPLE_ECHO_BUNDLES = simple-echo.lv2`:** a plain `=` with a space on each side. The builder reads these lines as text, not as make; `:=`, `+=`, missing spaces or a missing line make it give up with "failed to reach", which looks like a server problem but isn't (confirmed by MOD on the forum, Nov 2026). The assembler writes them this way.
+5. Wait for the build (the first one takes a few minutes), then click **Install**.
+6. **Bump the version before every re-upload** (`docs/lv2-and-mod-rules.md`), or MOD shows stale data.
 
 ## Anatomy of the generated recipe
 

@@ -10,7 +10,7 @@ It works with **any AI that can fetch a link**, from a plain chat to a coding ag
 
 Open a new chat with your AI and send it this, exactly as written:
 
-> Read https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/AGENTS.md?v=0.9.6 and help me build a plugin for my MOD.
+> Read https://github.com/Kiwooky/MOD-plugin-playbook/blob/main/AGENTS.md?v=0.9.7 and help me build a plugin for my MOD.
 
 **Copy the link from here, not from your browser's address bar.** The `?v=` on the end matters: AI chat apps keep old copies of GitHub pages for weeks, and the plain link can hand your AI an outdated version of the guide. The number changes with every release.
 

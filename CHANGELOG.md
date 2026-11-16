@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.9.7 — 2026-11-17
+
+- **Builder lines:** `<P>_VERSION` and `<P>_BUNDLES` must be written exactly `NAME_VERSION = …` / `NAME_BUNDLES = name.lv2`, with a plain `=` and spaces. The Online Builder reads them as text; `:=`, `+=`, no spaces or a missing line end in a misleading "failed to reach". First item in the hand-written `.mk` checklist (`AGENTS.md`), plus `path-a-single-recipe.md`, `known-mod-issues.md` and a lesson. Suggested by MOD on the forum after a community build failed this way.
+
 ## 0.9.6 — 2026-11-11
 
 - **Preset names in the manifest:** hand-written presets often listed each preset in `manifest.ttl` without its `rdfs:label`. DPF and `tools/presets_from_device.py` include it, so hosts can show names without opening `presets.ttl`. Now in the hand-written `.mk` checklist (`AGENTS.md`) and `lv2-and-mod-rules.md`. Prompted by a community report of preset names turning into long URIs when paging on a unit; a Duo showed names with and without the label, so the label isn't proven to be the cause.

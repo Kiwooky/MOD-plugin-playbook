@@ -101,6 +101,8 @@ The incidents come from five plugins built while writing this playbook: a hall r
 
 ## Bypass, presets and identity
 
+- **`_VERSION` and `_BUNDLES` use a plain `=` with spaces.** A community recipe written by an AI used another form; the Online Builder couldn't find the bundle line and reported "failed to reach", which looked like a server outage. Confirmed by MOD on the forum. (`AGENTS.md` checklist, `path-a-single-recipe.md`, `known-mod-issues.md`)
+
 - **`rdfs:seeAlso`, never `lv2:seeAlso`, in `manifest.ttl`.** A hand-written recipe from a chat without a shell used `lv2core#seeAlso`: MOD never read the plugin's TTL, so it installed with no name, category or controls and couldn't be removed from the UI. Installing a fixed build with the same bundle name replaced it. Reproduced with `lv2info` (0 ports, no name). (`AGENTS.md`, hand-written `.mk` checklist)
 
 - **Rules learned on one kind of effect get scoped, not copied.** The first versions said "Tails on/off" and "soft-knee every output" for every plugin, because they came from delays. A gain pedal has no tail, and a knee on its output squashes the boost it exists for. Rules now carry the trait they apply to. (`effect-profile.md`)

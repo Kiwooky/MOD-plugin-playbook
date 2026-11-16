@@ -19,6 +19,10 @@ A MIDI-learned control works in the audio, but no browser shows the change; mete
 
 1.14's web UI uses optional chaining (`a?.b`), which Safari parses only from iOS 13.4. On older iOS, `modgui.js` and `pedalboard.js` fail to parse and the UI never starts; every iOS browser uses Safari's engine. Patching those lines makes it load, but slowly. Use a tablet on iOS 13.4 or later.
 
+## The builder says "failed to reach" but the server is fine
+
+The Online Builder reads `<P>_BUNDLES = <name>.lv2` (and `<P>_VERSION = …`) from the uploaded `.mk` as plain text, written exactly like that: a plain `=` with spaces around it, the prefix matching the filename. If it can't find the line (`:=`, `+=`, no spaces, or missing), it gives up with a "failed to reach" message instead of saying what's wrong. Fix the line and build again. MOD say they'll improve the message (forum, Nov 2026).
+
 ## Cookbook documentation gaps (as of Oct 2026)
 
 - The cookbook's pre-flight says ControlPort count = `kParameterCount` − 1; it should be **equal**.
