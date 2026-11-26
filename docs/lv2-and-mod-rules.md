@@ -57,7 +57,7 @@ Saved pedalboards store port symbols and values. After anyone else has the plugi
 
 ## Port groups and panel order
 
-MOD's settings panel lists groups by the group's `lv2:index`, then each group's ports by port index; without groups (an older OS) it's port index alone. So **number the ports in the order you want them shown, and group every input control** (a mix of grouped and ungrouped ports sorts unpredictably). Groups: `pg:group <URI#portGroup_x>` on each port, and per group `a pg:InputGroup ; lv2:index n ; lv2:name ; lv2:symbol`. DPF writes the groups from `Parameter::groupId` + `initPortGroup()` but not `lv2:index`, and without it MOD sorts groups alphabetically: add it by hand (`ttlcmp.py` allows it). Verified with mod-ui's own plugin-info code.
+MOD's settings panel lists groups by the group's `lv2:index`, then each group's ports by port index; without groups (an older OS) it's port index alone. So **number the ports in the order you want them shown, and group every input control** (a mix of grouped and ungrouped ports sorts unpredictably). Groups: `pg:group <URI#portGroup_x>` on each port, and per group `a pg:InputGroup ; lv2:index n ; lv2:name ; lv2:symbol`. DPF writes the groups from `Parameter::groupId` + `initPortGroup()` but not `lv2:index`, and without it MOD sorts groups alphabetically: add it by hand (`ttlcmp.py` allows it). Verified with mod-ui's own plugin-info code. Sorting by `lv2:index` arrived in MOD OS 1.14 (mod-ui `b8c0e1e4`); older mod-ui (1.13, pi-Stomp, MODEP) keeps groups in hash-map order, which in practice lists them in reverse. Nothing in the TTL fixes that, so number groups for 1.14 and accept the old order.
 
 ## Factory presets
 
